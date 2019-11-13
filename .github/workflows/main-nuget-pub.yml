@@ -1,6 +1,10 @@
 name: public nuget pack, push
 
-on: [push]
+on:
+  push:
+    paths:
+    - 'sporq.nuspec'
+    - '.github/workflows/main-nuget-pub.yml'
 
 jobs:
   build:
