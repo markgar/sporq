@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <!-- Required elements-->
-        <id>sporq</id>
+        <id>Sporq</id>
         <version>0.2.0</version>
         <description>Sporq: your Azure governance multi-tool.</description>
         <authors>mgarner</authors>
