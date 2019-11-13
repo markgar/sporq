@@ -26,7 +26,7 @@ steps:
 - task: NuGetCommand@2
   inputs:
     command: 'pack'
-    packagesToPack: 'Sporq.nuspec'
+    packagesToPack: 'sporq.nuspec'
     versioningScheme: 'byEnvVar'
     versionEnvVar: 'Version'
 
