@@ -1,5 +1,5 @@
 # Introduction 
-**Sporq** is a governance framework that includes things like a programmatic way to create arm templates, a naming convention, secret managemnt and rotation right from the start, and a framework to security-test arm templates before they are deployed.
+**Sporq** is a governance framework that includes things like a programmatic way to [create arm templates](doc/GettingStarted.md), a [naming convention](doc/NamingConvention.md), [secret managemnt and rotation](doc/RefreshingKeys.md) right from the start, [cost management](ResourceGroups.md) by default, and a framework to [security-test arm templates](doc/Testing.md) before they are deployed.
 
 **Sporq** is for you if:
 - You want to get going fast and don't mind using a governance strategy that is _pre-built_ (it is ready go right now - no changes needed), _opinionated_ (there is a certian way of doing things), and _prescriptive_ (focused on getting things done rather than discussing options)
@@ -34,7 +34,7 @@ Now that you have the Azure Storage Accont object, you add it to your base templ
 $baseTemplate.resources += $aStorageAccount
 ```
 
-There are more functions like `Get-StorageTemplateFragment` for other objects such as `Get-EventHubNamespaceTemplateFragment`.  You'll also use `Get-KeyVaultTemplateFragment` to create a Key Vault where you can store secrets.  You can learn how to do this with **Sporq** by reading [Storing Secrets in Key Vault](doc/StoringSecrets.md).
+There are more functions like `Get-StorageTemplateFragment` for other objects such as `Get-EventHubNamespaceTemplateFragment`.  You'll also use `Get-KeyVaultTemplateFragment` to create a Key Vault where you can store secrets.  You can learn how to do this with **Sporq** by reading [Storing Secrets in Key Vault](doc/RefreshingKeys.md).
 
 Because of the way Sporq convention works, it is easy to use this both on your local machine, and also in an Azure Dev Ops pipeline.  You'll learm more about how the boilerplate code works to enable this convention.  If you want to customize the arm template fragments or the tests that inside Sporq, see [Custimizing Sporq for Your Enterprise](doc/CustomizeSporq.md).
 
