@@ -1,5 +1,5 @@
 # Introduction 
-**Sporq** is a governance framework that includes things like a programmatic way to [create arm templates](doc/GettingStarted.md), a [naming convention](doc/NamingConvention.md), [secret managemnt and rotation](doc/RefreshingKeys.md) right from the start, [cost management](doc/ResourceGroups.md) by default, and a framework to [security-test arm templates](doc/Testing.md) before they are deployed.
+**Sporq** is a governance framework that includes things like a programmatic way to [create arm templates](doc/GettingStarted.md), a [naming convention](doc/NamingConvention.md), [secret management and rotation](doc/RefreshingKeys.md) right from the start, [cost management](doc/ResourceGroups.md) by default, and a framework to [security-test arm templates](doc/Testing.md) before they are deployed.
 
 **Sporq** is for you if:
 - You want to get going fast and don't mind using a governance strategy that is _pre-built_ (it is ready go right now - no changes needed), _opinionated_ (there is a certian way of doing things), and _prescriptive_ (focused on getting things done rather than discussing options)
@@ -7,12 +7,12 @@
 - You want to store secrets in Key Vault by default and rotate them regularly
 - You want to follow a naming convention
 - You think cost governanace is an important part of utilizing the cloud
-- You want to perform 'unit tests' on arm templates to ensure security and policy adherence as earely as possible in the development cycle: during the build phase.
+- You want to perform 'unit tests' on arm templates to ensure security and policy adherence as early as possible in the development cycle: during the build phase.
 
 # Getting to know Sporq
 **Sporq** is a powershell library delivered to you via a public [nuget.org](https://www.nuget.org/packages/Sporq/) package that makes the creation and testing of arm templates easier.  You'll declare variables and use pre-built functions to retrieve arm template fragments.  These fragments can be aggregated together to create an arm template object that can be finally exported to a ready-to-deploy arm template json file.
 
-By the way - there are two ways to use **Sporq**.  The quickest is to use the public nuget package.  This includes template fragemnts and tests that are ready to go.  But if you'd like to customize these artifacts, you can do that too.  See [Customizing Sporq for Your Enterprise](doc/CustomizeSporq.md).
+By the way - there are two ways to use **Sporq**.  The quickest is to use the public nuget package.  This includes template fragments and tests that are ready to go.  But if you'd like to customize these artifacts, you can do that too.  See [Customizing Sporq for Your Enterprise](doc/CustomizeSporq.md).
 
 When you use **Sporq**, you first retrieve an object that represents and empty arm template.
 ```powershell
@@ -28,7 +28,7 @@ The next thing is to retrieve an object that represents the infrastructure you'd
 $aStorageAccount = Get-StorageTemplateFragment -CommonProperties $commonProperties -Location "centralus" -StorageAccessTier "Standard_RAGRS" -StorageTier "Standard"
 ```
 
-Now that you have the Azure Storage Accont object, you add it to your base template like this:
+Now that you have the Azure Storage Account object, you add it to your base template like this:
 ```powershell
 # Add it to the template
 $baseTemplate.resources += $aStorageAccount
