@@ -8,7 +8,7 @@ You'll need to use some boilerplate code that includes conventions that make thi
 3.  When you open this file, VSCode should open a powershell terminal.
 4. (Option 1)  Go to the powershell terminal, and run this command:
 ``` powershell
-Install-Package -MinimumVersion 0.1.1 -MaximumVersion 0.1.1 -Destination ./packages -Source https://www.nuget.org/api/v2 -Name sporq
+Install-Package -MinimumVersion 0.2.2 -MaximumVersion 0.2.2 -Destination ./packages -Source https://www.nuget.org/api/v2 -Name sporq
 ```
 This should pull the **Sporq** package locally and unpack it into a directory called ```packages```.
 
@@ -17,7 +17,7 @@ This should pull the **Sporq** package locally and unpack it into a directory ca
 ``` xml
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
-  <package id="Sporq" version="0.1.1" />
+  <package id="Sporq" version="0.2.2" />
 </configuration>
 ```
 
