@@ -1,4 +1,4 @@
-name: CI
+name: public nuget pack, push
 
 on: [push]
 
