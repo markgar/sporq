@@ -6,6 +6,7 @@
 - Your skillset doesn't include arm template creation
 - You want to store secrets in Key Vault by default and rotate them regularly
 - You want to follow a naming convention
+- You think cost governanace is an important part of utilizing the cloud
 - You want to perform 'unit tests' on arm templates to ensure security and policy adherence as earely as possible in the development cycle: during the build phase.
 
 # Getting to know Sporq
