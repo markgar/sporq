@@ -18,4 +18,4 @@ jobs:
     - name: Pack NuGet package
       run: nuget pack sporq.nuspec
     - name: Push NuGet package
-      run: nuget push *.nupkg -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secrets.sporq_nuget_api_key }} -No-Symbols true
+      run: nuget push *.nupkg -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secrets.sporq_nuget_api_key }} --No-Symbols true
