@@ -23,115 +23,139 @@ function Get-Template {
     #Write-Host $baseTemplate
     # Declare some infrastructure
 
-    #region Key Vault
-    $keyVault = Get-KeyVaultTemplateFragment -CommonProperties $commonProperties -Location "centralus" 
-    $baseTemplate.resources += $keyVault
-    #endregion
+    # #region Key Vault
+    # $keyVault = Get-KeyVaultTemplateFragment -CommonProperties $commonProperties -Location "centralus" 
+    # $baseTemplate.resources += $keyVault
+    # #endregion
 
-    #region Storage Acount
-    $myStorageAccount = Get-StorageTemplateFragment `
-        -CommonProperties $commonProperties `
-        -Location "centralus" `
-        -ExceptionGuid "f354adb1-429c-4c83-b6bd-de6012358b33" `
-        -StorageAccessTier "Standard_LRS" `
-        -StorageTier "Standard"
-    $baseTemplate.resources += $myStorageAccount
+    # #region Storage Acount
+    # $myStorageAccount = Get-StorageTemplateFragment `
+    #     -CommonProperties $commonProperties `
+    #     -Location "centralus" `
+    #     -ExceptionGuid "f354adb1-429c-4c83-b6bd-de6012358b33" `
+    #     -StorageAccessTier "Standard_LRS" `
+    #     -StorageTier "Standard"
+    # $baseTemplate.resources += $myStorageAccount
     
-    $storageKeyVaultSecret = Get-KeyVaultSecretTemplateFragment `
-        -CommonProperties $commonProperties `
-        -Location "centralus" `
-        -KeyVaultFragmentObject $keyVault `
-        -KeyOwningObject $myStorageAccount
-    $baseTemplate.resources += $storageKeyVaultSecret
-    #endregion
+    # $storageKeyVaultSecret = Get-KeyVaultSecretTemplateFragment `
+    #     -CommonProperties $commonProperties `
+    #     -Location "centralus" `
+    #     -KeyVaultFragmentObject $keyVault `
+    #     -KeyOwningObject $myStorageAccount
+    # $baseTemplate.resources += $storageKeyVaultSecret
+    # #endregion
 
-    # region Cosmos DB
-    $myCosmosDB = Get-CosmosTemplateFragment `
-        -CommonProperties $commonProperties `
-        -Location "centralus"
-    $baseTemplate.resources += $myCosmosDB
+    # # region Cosmos DB
+    # $myCosmosDB = Get-CosmosTemplateFragment `
+    #     -CommonProperties $commonProperties `
+    #     -Location "centralus"
+    # $baseTemplate.resources += $myCosmosDB
 
-    $cosmosKeyVaultSecret = Get-KeyVaultSecretTemplateFragment `
-        -CommonProperties $commonProperties `
-        -Location "centralus" `
-        -KeyVaultFragmentObject $keyVault `
-        -KeyOwningObject $myCosmosDB
+    # $cosmosKeyVaultSecret = Get-KeyVaultSecretTemplateFragment `
+    #     -CommonProperties $commonProperties `
+    #     -Location "centralus" `
+    #     -KeyVaultFragmentObject $keyVault `
+    #     -KeyOwningObject $myCosmosDB
 
-    $baseTemplate.resources += $cosmosKeyVaultSecret
-    # endregion
+    # $baseTemplate.resources += $cosmosKeyVaultSecret
+    # # endregion
 
-    # region App Services
-    $webTierASP = Get-AppServicePlanTemplateFragment `
-        -CommonProperties $commonProperties `
-        -Location "centralus" `
-        -AppServicePlanSKU "S1"
-    $baseTemplate.resources += $webTierASP
+    # # region App Services
+    # $webTierASP = Get-AppServicePlanTemplateFragment `
+    #     -CommonProperties $commonProperties `
+    #     -Location "centralus" `
+    #     -AppServicePlanSKU "S1"
+    # $baseTemplate.resources += $webTierASP
 
     
-    $webTierWebUi = Get-AppServiceWebSiteTemplateFragment `
-        -CommonProperties $commonProperties `
-        -Location "centralus" `
-        -UniqueNamePhrase "web" `
-        -ASPFragmentObject $webTierASP
-    $baseTemplate.resources += $webTierWebUi
+    # $webTierWebUi = Get-AppServiceWebSiteTemplateFragment `
+    #     -CommonProperties $commonProperties `
+    #     -Location "centralus" `
+    #     -UniqueNamePhrase "web" `
+    #     -ASPFragmentObject $webTierASP
+    # $baseTemplate.resources += $webTierWebUi
 
-    $webTierApi = Get-AppServiceWebSiteTemplateFragment `
-        -CommonProperties $commonProperties `
-        -Location "centralus" `
-        -UniqueNamePhrase "api" `
-        -ASPFragmentObject $webTierASP
-    $baseTemplate.resources += $webTierApi
-    # endregion
+    # $webTierApi = Get-AppServiceWebSiteTemplateFragment `
+    #     -CommonProperties $commonProperties `
+    #     -Location "centralus" `
+    #     -UniqueNamePhrase "api" `
+    #     -ASPFragmentObject $webTierASP
+    # $baseTemplate.resources += $webTierApi
+    # # endregion
 
-    # region App Insights
-    $appInsights = Get-AppInsightsTemplateFragment `
-        -CommonProperties $commonProperties `
-        -Location "centralus"
-    $baseTemplate.resources += $appInsights
-    # endregion
+    # # region App Insights
+    # $appInsights = Get-AppInsightsTemplateFragment `
+    #     -CommonProperties $commonProperties `
+    #     -Location "centralus"
+    # $baseTemplate.resources += $appInsights
+    # # endregion
     
-    # region Search
-    $mySearchService = Get-SearchTemplateFragment `
-        -CommonProperties $commonProperties `
-        -Location "centralus" `
-        -ReplicaCount 1 `
-        -PartitionCount 1 `
-        -Sku "standard"
-    $baseTemplate.resources += $mySearchService
+    # # region Search
+    # $mySearchService = Get-SearchTemplateFragment `
+    #     -CommonProperties $commonProperties `
+    #     -Location "centralus" `
+    #     -ReplicaCount 1 `
+    #     -PartitionCount 1 `
+    #     -Sku "standard"
+    # $baseTemplate.resources += $mySearchService
 
-    $searchKeyVaultSecret = Get-KeyVaultSecretTemplateFragment `
-        -CommonProperties $commonProperties `
-        -Location "centralus" `
-        -KeyVaultFragmentObject $keyVault `
-        -KeyOwningObject $mySearchService
-    $baseTemplate.resources += $searchKeyVaultSecret
-    # endregion
+    # $searchKeyVaultSecret = Get-KeyVaultSecretTemplateFragment `
+    #     -CommonProperties $commonProperties `
+    #     -Location "centralus" `
+    #     -KeyVaultFragmentObject $keyVault `
+    #     -KeyOwningObject $mySearchService
+    # $baseTemplate.resources += $searchKeyVaultSecret
+    # # endregion
 
-    # region Event Hub
-    $eventHubNamespace = Get-EventHubNamespaceTemplateFragment `
-        -CommonProperties $commonProperties `
-        -Location "centralus"
-    $baseTemplate.resources += $eventHubNamespace
+    # # region Event Hub
+    # $eventHubNamespace = Get-EventHubNamespaceTemplateFragment `
+    #     -CommonProperties $commonProperties `
+    #     -Location "centralus"
+    # $baseTemplate.resources += $eventHubNamespace
 
-    $eventHubNamespaceAuthorizationRule = Get-EventHubNamespaceAuthorizationRuleTemplateFragement `
-        -CommonProperties $commonProperties `
-        -Location "centralus" `
-        -EventHubNamespaceObject $eventHubNamespace
-    $baseTemplate.resources += $eventHubNamespaceAuthorizationRule
+    # $eventHubNamespaceAuthorizationRule = Get-EventHubNamespaceAuthorizationRuleTemplateFragement `
+    #     -CommonProperties $commonProperties `
+    #     -Location "centralus" `
+    #     -EventHubNamespaceObject $eventHubNamespace
+    # $baseTemplate.resources += $eventHubNamespaceAuthorizationRule
 
-    $namespaceKeyVaultSecret = Get-KeyVaultSecretTemplateFragment `
-        -CommonProperties $commonProperties `
-        -Location "centralus" `
-        -KeyVaultFragmentObject $keyVault `
-        -KeyOwningObject $eventHubNamespaceAuthorizationRule
-    $baseTemplate.resources += $namespaceKeyVaultSecret
+    # $namespaceKeyVaultSecret = Get-KeyVaultSecretTemplateFragment `
+    #     -CommonProperties $commonProperties `
+    #     -Location "centralus" `
+    #     -KeyVaultFragmentObject $keyVault `
+    #     -KeyOwningObject $eventHubNamespaceAuthorizationRule
+    # $baseTemplate.resources += $namespaceKeyVaultSecret
 
-    $eventHub = Get-EventHubTemplateFragment `
+    # $eventHub = Get-EventHubTemplateFragment `
+    #     -CommonProperties $commonProperties `
+    #     -Location "centralus" `
+    #     -EventHubNamespaceFragmentObject $eventHubNamespace
+    # $baseTemplate.resources += $eventHub
+    # # endregion
+
+    $publicIp = Get-PublicIpAddressTemplateFragment `
         -CommonProperties $commonProperties `
-        -Location "centralus" `
-        -EventHubNamespaceFragmentObject $eventHubNamespace
-    $baseTemplate.resources += $eventHub
-    # endregion
+        -Location "westus"
+    $baseTemplate.resources += $publicIp
+
+    $networkInterface = Get-NetworkInterfaceTemplateFragment `
+        -CommonProperties $commonProperties `
+        -Location "westus" `
+        -VNetResourceGroupName "avm" `
+        -VnetName "avm-vnet" `
+        -SubnetName "default" `
+        -PublicIPFragmentObject $publicIp
+    $baseTemplate.resources += $networkInterface
+
+    $virtualMachine = Get-VirtualMachineTemplateFragment `
+        -CommonProperties $commonProperties `
+        -Location "westus" `
+        -VMSize "Standard_A2_v2" `
+        -AdminUserName "mgarner-admin" `
+        -AdminPwd "Password1!" `
+        -NetworkInterfaceFragmentObject $networkInterface
+    $baseTemplate.resources += $virtualMachine
+
 
     # convert the template object to a json string
     $templateJson = $baseTemplate | ConvertTo-Json -Depth 10

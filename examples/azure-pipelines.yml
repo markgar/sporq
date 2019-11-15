@@ -1,0 +1,43 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+
+- task: NuGetCommand@2
+  displayName: Fetch nuget packages (pshell-arm) from Azure Artifacts Feed
+  inputs:
+    command: 'restore'
+    restoreSolution: 'packages.config'
+    feedsToUse: 'select'
+    vstsFeed: '71066ab8-a939-4a71-9017-5e0cb4d2f99c'
+    restoreDirectory: 'packages'
+
+- task: PowerShell@2
+  displayName: 'Generate ARM Json from Code, Run Pester Tests'
+  inputs:
+    targetType: 'inline'
+    script: |
+      # run powershell to load libraries
+      . ./azuredeploy.arm.ps1
+
+      # decide on template location and name
+      $templateLocation = "./azuredeploy.json"
+
+      # call function inside azuredeploy.arm.ps1 to generate template
+      # use template location already defined
+      Get-Template -TemplateOutputPath $templateLocation
+
+      # run tests using the template location already defined
+      Test-Template -TemplatePath $templateLocation
+
+
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'NUnit'
+    testResultsFiles: '**/Tests.Report*.xml'
+    failTaskOnFailedTests: true
+

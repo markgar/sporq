@@ -14,8 +14,11 @@ Set-Location $PSScriptRoot
 . ./EventHubNamespace.frag.ps1
 . ./KeyVault.frag.ps1
 . ./KeyVaultSecret.frag.ps1
+. ./NetworkInterface.frag.ps1
+. ./PublicIpAddress.frag.ps1
 . ./Search.frag.ps1
 . ./StorageAccount.frag.ps1
+. ./VirtualMachine.frag.ps1
 
 # Set current directory back to where the script started
 Set-Location $pwd

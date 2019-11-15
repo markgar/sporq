@@ -110,6 +110,9 @@ function Get-ResourceTypeAbbreviation {
         "Microsoft.KeyVault/vaults" { $abbreviation = "keyvlt"; break }
         "Microsoft.EventHub/namespaces/eventhubs" { $abbreviation = "evhb"; break }
         "Microsoft.EventHub/namespaces/AuthorizationRules" { $abbreviation = "evhbnsar"; break }
+        "Microsoft.Compute/virtualMachines" { $abbreviation = "vm"; break }
+        "Microsoft.Network/networkInterfaces" { $abbreviation = "nic"; break }
+        "Microsoft.Network/publicIPAddresses" { $abbreviation = "pip"; break }
     }
 
     return $abbreviation

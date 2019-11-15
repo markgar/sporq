@@ -24,8 +24,11 @@
         <file src="library/EventHubNamespace.frag.ps1" target="EventHubNamespace.frag.ps1" />
         <file src="library/KeyVault.frag.ps1" target="KeyVault.frag.ps1" />
         <file src="library/KeyVaultSecret.frag.ps1" target="KeyVaultSecret.frag.ps1" />
+        <file src="library/NetworkInterface.frag.ps1" target="NetworkInterface.frag.ps1" />
+        <file src="library/PublicIpAddress.frag.ps1" target="PublicIpAddress.frag.ps1" />
         <file src="library/Search.frag.ps1" target="Search.frag.ps1" />
         <file src="library/StorageAccount.frag.ps1" target="StorageAccount.frag.ps1" />
+        <file src="library/VirtualMachine.frag.ps1" target="VirtualMachine.frag.ps1" />
 
 
         <file src="tests/AppServiceWebSite.Tests.ps1" target="AppServiceWebSite.Tests.ps1" />

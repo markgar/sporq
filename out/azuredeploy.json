@@ -1,0 +1,82 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {},
+  "variables": {},
+  "resources": [
+    {
+      "type": "Microsoft.Network/publicIPAddresses",
+      "apiVersion": "2019-09-01",
+      "name": "q4k-dev-pip-usw",
+      "location": "westus",
+      "sku": {
+        "name": "Basic"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic"
+      }
+    },
+    {
+      "type": "Microsoft.Network/networkInterfaces",
+      "apiVersion": "2019-09-01",
+      "name": "q4k-dev-nic-usw",
+      "location": "westus",
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/networkInterfaces/', 'q4k-dev-pip-usw')]"
+              },
+              "subnet": {
+                "id": "[resourceId('avm', 'Microsoft.Network/virtualNetworks/subnets', 'avm-vnet', 'default')]"
+              }
+            }
+          }
+        ],
+        "enableAcceleratedNetworking": false,
+        "enableIPForwarding": false
+      }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines",
+      "apiVersion": "2019-03-01",
+      "name": "q4k-dev-vm-usw",
+      "location": "westus",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkInterfaces/', 'q4k-dev-nic-usw')]"
+      ],
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "Standard_A2_v2"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "MicrosoftWindowsServer",
+            "offer": "WindowsServer",
+            "sku": "2016-Datacenter",
+            "version": "latest"
+          },
+          "osDisk": {
+            "createOption": "FromImage"
+          },
+          "dataDisks": []
+        },
+        "osProfile": {
+          "computerName": "q4k-dev-vm-usw",
+          "adminUsername": "mgarner-admin",
+          "adminPassword": "Password1!"
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces/', 'q4k-dev-nic-usw')]"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
