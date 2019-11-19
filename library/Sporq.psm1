@@ -7,7 +7,9 @@ Set-Location $PSScriptRoot
 # Load up all the fragements
 . ./BaseTemplate.frag.ps1
 . ./AppInsights.frag.ps1
+. ./AppServiceFunctionApp.frag.ps1
 . ./AppServicePlan.frag.ps1
+. ./AppServicePlanConsumption.frag.ps1
 . ./AppServiceWebSite.frag.ps1
 . ./CosmosDBAccount.frag.ps1
 . ./EventHub.frag.ps1
@@ -16,7 +18,7 @@ Set-Location $PSScriptRoot
 . ./KeyVaultSecret.frag.ps1
 . ./NetworkInterface.frag.ps1
 . ./PublicIpAddress.frag.ps1
-. ./Search.frag.ps1
+. ./SearchService.frag.ps1
 . ./StorageAccount.frag.ps1
 . ./VirtualMachine.frag.ps1
 

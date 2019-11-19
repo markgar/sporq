@@ -1,6 +1,6 @@
 . ./_Abbreviations.ps1
 
-function Get-SpqPublicIpAddress {
+function Get-SpqAppServicePlanConsumption {
     Param(
         [parameter(Mandatory = $true)] [object] $CommonProperties,
         [parameter(Mandatory = $true)] [string] $Location,
@@ -8,27 +8,25 @@ function Get-SpqPublicIpAddress {
         [string] $ExceptionGuid
     )
     
-    $pipName = Get-SpqResourceName `
+    $aspName = Get-SpqResourceName `
         -CommonProperties $CommonProperties `
         -UniqueNamePhrase $UniqueNamePhrase `
-        -ServiceTypeName "Microsoft.Network/publicIPAddresses" `
+        -ServiceTypeName "Microsoft.Web/serverfarms/consumption" `
         -Location $Location
-        
 
     $json = '
     {
-        "type": "Microsoft.Network/publicIPAddresses",
-        "apiVersion": "2019-09-01",
-        "name": "' + $pipName + '",
+        "type": "Microsoft.Web/serverfarms",
+        "apiVersion": "2016-09-01",
+        "name": "' + $aspName + '",
         "location": "' + $Location + '",
         "sku": {
-            "name": "Basic"
+            "name": "Y1",
+            "tier": "Dynamic"
         },
-        "properties": {
-            "publicIPAllocationMethod": "Dynamic"
-        }
+        "kind": "functionapp",
+        "properties": {}
     }
     '
     return ConvertFrom-Json $json
 }
-

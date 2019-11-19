@@ -1,15 +1,15 @@
 . ./_Abbreviations.ps1
 
-function Get-ReferenceToStorageKey {
+function Get-SpqReferenceToStorageKey {
     Param(
-        [parameter(Mandatory = $true)] [object] $StorageFragmentObject
+        [parameter(Mandatory = $true)] [object] $StorageAccount
     )
 
-    $reference = "[listKeys(resourceId('Microsoft.Storage/storageAccounts', '" + $StorageFragmentObject.name + "'), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value]"
+    $reference = "[listKeys(resourceId('Microsoft.Storage/storageAccounts', '" + $StorageAccount.name + "'), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value]"
     return $reference
 }
 
-function Get-StorageTemplateFragment {
+function Get-SpqStorageAccount {
     Param(
         [parameter(Mandatory = $true)] [object] $CommonProperties,
         [parameter(Mandatory = $true)] [string] $Location,
@@ -19,7 +19,7 @@ function Get-StorageTemplateFragment {
         [parameter(Mandatory = $true)] [string] $StorageTier
     )
 
-    $storageName = Get-ResourceName `
+    $storageName = Get-SpqResourceName `
         -CommonProperties $CommonProperties `
         -UniqueNamePhrase $UniqueNamePhrase `
         -ServiceTypeName "Microsoft.Storage/storageAccounts" `
@@ -65,11 +65,11 @@ function Get-StorageTemplateFragment {
     return ConvertFrom-Json $json
 }
 
-function Get-StorageBlobServiceConfigTemplateFragment {
+function Get-SpqStorageBlobServiceConfig {
     Param(
         [parameter(Mandatory = $true)] [object] $CommonProperties,
         [parameter(Mandatory = $true)] [string] $Location,
-        [parameter(Mandatory = $true)] [object] $StorageFragmentObject,
+        [parameter(Mandatory = $true)] [object] $StorageAccount,
         [string] $ExceptionGuid
     )
 
@@ -77,9 +77,9 @@ function Get-StorageBlobServiceConfigTemplateFragment {
     {
         "type": "Microsoft.Storage/storageAccounts/blobServices",
         "apiVersion": "2019-04-01",
-        "name": "' + $StorageFragmentObject.name + '/default",
+        "name": "' + $StorageAccount.name + '/default",
         "dependsOn": [
-            "[resourceId(''Microsoft.Storage/storageAccounts'', ''' + $StorageFragmentObject.name + ''')]"
+            "[resourceId(''Microsoft.Storage/storageAccounts'', ''' + $StorageAccount.name + ''')]"
         ],
         "properties": {
             "cors": {

@@ -1,6 +1,6 @@
 . ./_Abbreviations.ps1
 
-function Get-AppInsightsTemplateFragment {
+function Get-SpqAppInsights {
     Param(
         [parameter(Mandatory = $true)] [object] $CommonProperties,
         [parameter(Mandatory = $true)] [string] $Location,
@@ -8,7 +8,7 @@ function Get-AppInsightsTemplateFragment {
         [string] $ExceptionGuid
     )
     
-    $appInsightsName = Get-ResourceName `
+    $appInsightsName = Get-SpqResourceName `
         -CommonProperties $CommonProperties `
         -UniqueNamePhrase $UniqueNamePhrase `
         -ServiceTypeName "microsoft.insights/components" `

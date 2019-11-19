@@ -1,15 +1,15 @@
 . ./_Abbreviations.ps1
 
-function Get-ReferenceToSearchAdminKey {
+function Get-SpqReferenceToSearchAdminKey {
     Param(
-        [parameter(Mandatory = $true)] [object] $SearchFragmentObject
+        [parameter(Mandatory = $true)] [object] $SearchService
     )
 
-    $reference = "[listAdminKeys(resourceId('Microsoft.Search/searchServices', '" + $SearchFragmentObject.name + "'), providers('Microsoft.Search', 'searchServices').apiVersions[0]).primaryKey]"
+    $reference = "[listAdminKeys(resourceId('Microsoft.Search/searchServices', '" + $SearchService.name + "'), providers('Microsoft.Search', 'searchServices').apiVersions[0]).primaryKey]"
     return $reference
 }
 
-function Get-SearchTemplateFragment {
+function Get-SpqSearch {
     Param(
         [parameter(Mandatory = $true)] [object] $CommonProperties,
         [parameter(Mandatory = $true)] [string] $Location,
@@ -20,7 +20,7 @@ function Get-SearchTemplateFragment {
         [parameter(Mandatory = $true)] [string] $PartitionCount
     )
     
-    $searchName = Get-ResourceName `
+    $searchName = Get-SpqResourceName `
         -CommonProperties $CommonProperties `
         -UniqueNamePhrase $UniqueNamePhrase `
         -ServiceTypeName "Microsoft.Search/searchServices" `

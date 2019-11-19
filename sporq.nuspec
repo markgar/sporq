@@ -3,7 +3,7 @@
     <metadata>
         <!-- Required elements-->
         <id>Sporq</id>
-        <version>0.2.3</version>
+        <version>0.3.0</version>
         <description>Sporq: your Azure governance multi-tool.</description>
         <authors>mgarner</authors>
 
@@ -26,7 +26,7 @@
         <file src="library/KeyVaultSecret.frag.ps1" target="KeyVaultSecret.frag.ps1" />
         <file src="library/NetworkInterface.frag.ps1" target="NetworkInterface.frag.ps1" />
         <file src="library/PublicIpAddress.frag.ps1" target="PublicIpAddress.frag.ps1" />
-        <file src="library/Search.frag.ps1" target="Search.frag.ps1" />
+        <file src="library/SearchService.frag.ps1" target="Search.frag.ps1" />
         <file src="library/StorageAccount.frag.ps1" target="StorageAccount.frag.ps1" />
         <file src="library/VirtualMachine.frag.ps1" target="VirtualMachine.frag.ps1" />
 

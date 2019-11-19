@@ -1,6 +1,6 @@
 . ./_Abbreviations.ps1
 
-function Get-KeyVaultTemplateFragment {
+function Get-SpqKeyVault {
     Param(
         [parameter(Mandatory = $true)] [object] $CommonProperties,
         [parameter(Mandatory = $true)] [string] $Location,
@@ -8,7 +8,7 @@ function Get-KeyVaultTemplateFragment {
         [parameter(Mandatory = $false)] [string] $ExceptionGuid
     )
 
-    $keyVaultName = Get-ResourceName `
+    $keyVaultName = Get-SpqResourceName `
         -CommonProperties $CommonProperties `
         -UniqueNamePhrase $UniqueNamePhrase `
         -ServiceTypeName "Microsoft.KeyVault/vaults" `

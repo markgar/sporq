@@ -1,6 +1,6 @@
 . ./library/_Abbreviations.ps1
 
-function New-ResourceGroup {
+function New-SpqResourceGroup {
     Param(
         [parameter(Mandatory = $true)] [object] $CommonProperties,
         [parameter(Mandatory = $true)] [string] $Location,
@@ -11,7 +11,7 @@ function New-ResourceGroup {
 
     )
     
-    $resourceGroupName = Get-ResourceName `
+    $resourceGroupName = Get-SpqResourceName `
         -CommonProperties $commonProperties `
         -UniqueNamePhrase $UniqueNamePhrase `
         -ServiceTypeName "ResourceGroup" `

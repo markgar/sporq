@@ -3,14 +3,14 @@ function  Install-NewCosmosDbKey {
         [parameter(Mandatory = $true)] [string] $ResourceGroupName,
         [parameter(Mandatory = $true)] [string] $KeyName,
         [parameter(Mandatory = $true)] [string] $KeyVaultName,
-        [parameter(Mandatory = $true)] [string] $CosmosAccountName
+        [parameter(Mandatory = $true)] [string] $CosmosDbAccountName
     )
 
     $keyKind = @{ "keyKind" = "$KeyName" }
 
     $keys = Invoke-AzResourceAction -Action regenerateKey `
         -ResourceType "Microsoft.DocumentDb/databaseAccounts" -ApiVersion "2015-04-08" `
-        -ResourceGroupName $ResourceGroupName -Name $CosmosAccountName -Parameters $keyKind -Force
+        -ResourceGroupName $ResourceGroupName -Name $CosmosDbAccountName -Parameters $keyKind -Force
 
     if ($keyName -eq "Primary") {
         $keyValue = $keys.primaryMasterKey
@@ -23,7 +23,7 @@ function  Install-NewCosmosDbKey {
     $secretValue = ConvertTo-SecureString $keyValue -AsPlainText -Force
 
     # store in key vault
-    $secretName = $CosmosAccountName + "-key"
+    $secretName = $CosmosDbAccountName + "-key"
     Write-Host "Storing Secret"$SecretName
     $SetKeyResult = Set-AzureKeyVaultSecret -VaultName $KeyVaultName -Name $secretName -SecretValue $secretValue
 }
@@ -174,7 +174,7 @@ function  Install-NewKeys {
             }
             "Microsoft.DocumentDB/databaseAccounts" {
                 Write-Host "Found CosmosDB"$resource.name 
-                Install-NewCosmosDbKey -KeyName $KeyName -KeyVaultName $keyVaultName -ResourceGroupName $resourceGroupName -CosmosAccountName $resource.name 
+                Install-NewCosmosDbAccountKey -KeyName $KeyName -KeyVaultName $keyVaultName -ResourceGroupName $resourceGroupName -CosmosDbAccountName $resource.name 
                 break 
             }
             "Microsoft.EventHub/namespaces" {

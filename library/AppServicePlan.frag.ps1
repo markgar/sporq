@@ -1,6 +1,6 @@
 . ./_Abbreviations.ps1
 
-function Get-AppServicePlanTemplateFragment {
+function Get-SpqAppServicePlan {
     Param(
         [parameter(Mandatory = $true)] [object] $CommonProperties,
         [parameter(Mandatory = $true)] [string] $Location,
@@ -9,7 +9,7 @@ function Get-AppServicePlanTemplateFragment {
         [parameter(Mandatory = $true)] [string] $AppServicePlanSKU
     )
     
-    $aspName = Get-ResourceName `
+    $aspName = Get-SpqResourceName `
         -CommonProperties $CommonProperties `
         -UniqueNamePhrase $UniqueNamePhrase `
         -ServiceTypeName "Microsoft.Web/serverfarms" `

@@ -1,6 +1,6 @@
 # Set up your common properties here.
 # A centralized place to get one of these objects empty
-function Get-CommonProperties {
+function Get-SpqCommonProperties {
     #################################
     # customize this to your liking #
     #################################
@@ -15,7 +15,7 @@ function Get-CommonProperties {
     return $commonPropertiesString | ConvertFrom-Json
 }
 
-function Get-ResourceName {
+function Get-SpqResourceName {
     Param(
         [parameter(Mandatory = $true)] [object] $CommonProperties,
         [parameter(Mandatory = $false)] $UniqueNamePhrase = $null,
@@ -30,8 +30,8 @@ function Get-ResourceName {
         $separationCharacter = "-"
     }
 
-    $resourceTypeAbbreviation = Get-ResourceTypeAbbreviation -ServiceTypeName $ServiceTypeName
-    $locationAbbreviation = Get-LocationAbbreviation -Location $Location
+    $resourceTypeAbbreviation = Get-SpqResourceTypeAbbreviation -ServiceTypeName $ServiceTypeName
+    $locationAbbreviation = Get-SpqLocationAbbreviation -Location $Location
 
     #################################
     # customize this to your liking #
@@ -91,7 +91,7 @@ function Get-ResourceName {
 }
 
 #region Resource Abbrebiation
-function Get-ResourceTypeAbbreviation {
+function Get-SpqResourceTypeAbbreviation {
     Param(
         [parameter(Mandatory = $true)] [string] $ServiceTypeName
     )
@@ -102,7 +102,9 @@ function Get-ResourceTypeAbbreviation {
         "ResourceGroup" { $abbreviation = "rg"; break }
         "microsoft.insights/components" { $abbreviation = "appin"; break }
         "Microsoft.Web/serverfarms" { $abbreviation = "appsvcpl"; break }
+        "Microsoft.Web/serverfarms/consumption" { $abbreviation = "appsvcplc"; break }
         "Microsoft.Web/sites" { $abbreviation = "appsvcsite"; break }
+        "Microsoft.Web/sites/functions" { $abbreviation = "appsvcfunc"; break }
         "Microsoft.DocumentDB/databaseAccounts" { $abbreviation = "csmsacc"; break }
         "Microsoft.Storage/storageAccounts" { $abbreviation = "strg"; break }
         "Microsoft.Search/searchServices" { $abbreviation = "srch"; break }
@@ -119,7 +121,7 @@ function Get-ResourceTypeAbbreviation {
 }
 #endregion
 
-function Get-LocationAbbreviation {
+function Get-SpqLocationAbbreviation {
     Param(
         [parameter(Mandatory = $true)] [string] $Location
     )

@@ -22,19 +22,19 @@ function Get-Template {
 
 
     # Create Key Vault
-    $keyVault = Get-KeyVaultTemplateFragment -CommonProperties $commonProperties -Location "centralus" 
+    $keyVault = Get-SpqKeyVault -CommonProperties $commonProperties -Location "centralus" 
     # Add to Template
     $baseTemplate.resources += $keyVault
     
 
     # Create Storage Account
-    $myStorageAccount = Get-StorageTemplateFragment -CommonProperties $commonProperties -Location "centralus" -StorageAccessTier "Standard_LRS" -StorageTier "Standard"
+    $myStorageAccount = Get-SpqStorageAccount -CommonProperties $commonProperties -Location "centralus" -StorageAccessTier "Standard_LRS" -StorageTier "Standard"
     # Add to Template
     $baseTemplate.resources += $myStorageAccount
    
 
     # Create Key Vault Secret for Storage Account Key
-    $storageKeyVaultSecret = Get-KeyVaultSecretTemplateFragment -CommonProperties $commonProperties -Location "centralus" -KeyVaultFragmentObject $keyVault -KeyOwningObject $myStorageAccount
+    $storageKeyVaultSecret = Get-SpqKeyVaultSecret -CommonProperties $commonProperties -Location "centralus" -KeyVault $keyVault -KeyOwningObject $myStorageAccount
     # Add to Template
     $baseTemplate.resources += $storageKeyVaultSecret
 

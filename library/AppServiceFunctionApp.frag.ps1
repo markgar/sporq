@@ -1,18 +1,19 @@
 . ./_Abbreviations.ps1
 
-function Get-SpqAppServiceWebSite {
+function Get-SpqAppServiceFunctionApp {
     Param(
         [parameter(Mandatory = $true)] [object] $CommonProperties,
         [parameter(Mandatory = $true)] [string] $Location,
         [parameter(Mandatory = $false)] [string] $UniqueNamePhrase = $null,
         [string] $ExceptionGuid,
-        [parameter(Mandatory = $true)] [object] $AppServicePlan
+        [parameter(Mandatory = $true)] [object] $AppServicePlan,
+        [parameter(Mandatory = $true)] [object] $StorageAccount
     )
 
     $webSiteName = Get-SpqResourceName `
         -CommonProperties $CommonProperties `
         -UniqueNamePhrase $UniqueNamePhrase `
-        -ServiceTypeName "Microsoft.Web/sites" `
+        -ServiceTypeName "Microsoft.Web/sites/functions" `
         -Location $Location
 
     $json = '
@@ -21,14 +22,13 @@ function Get-SpqAppServiceWebSite {
         "apiVersion": "2016-08-01",
         "name": "' + $webSiteName + '",
         "location": "' + $Location + '",
-        "kind": "app",
+        "kind": "functionapp",
         "properties": {
-            "clientAffinityEnabled": true,
-            "httpsOnly": true,
             "serverFarmId": "[resourceId(''Microsoft.Web/serverfarms'', ''' + $AppServicePlan.name + ''')]"
         },
         "dependsOn": [
-            "[resourceId(''Microsoft.Web/serverfarms'', ''' + $AppServicePlan.name + ''')]"
+            "[resourceId(''Microsoft.Web/serverfarms'', ''' + $AppServicePlan.name + ''')]",
+            "[resourceId(''Microsoft.Storage/storageAccounts'', ''' + $StorageAccount.name + ''')]"
         ]
     }
     '

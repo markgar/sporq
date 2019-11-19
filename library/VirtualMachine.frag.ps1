@@ -1,6 +1,6 @@
 . ./_Abbreviations.ps1
 
-function Get-VirtualMachineTemplateFragment {
+function Get-SpqVirtualMachine {
     Param(
         [parameter(Mandatory = $true)] [object] $CommonProperties,
         [parameter(Mandatory = $true)] [string] $Location,
@@ -9,10 +9,10 @@ function Get-VirtualMachineTemplateFragment {
         [parameter(Mandatory = $true)] [string] $VMSize,
         [parameter(Mandatory = $true)] [string] $AdminUserName,
         [parameter(Mandatory = $true)] [string] $AdminPwd,
-        [parameter(Mandatory = $true)] [object] $NetworkInterfaceFragmentObject
+        [parameter(Mandatory = $true)] [object] $NetworkInterface
     )
     
-    $vmName = Get-ResourceName `
+    $vmName = Get-SpqResourceName `
         -CommonProperties $CommonProperties `
         -UniqueNamePhrase $UniqueNamePhrase `
         -ServiceTypeName "Microsoft.Compute/virtualMachines" `
@@ -25,7 +25,7 @@ function Get-VirtualMachineTemplateFragment {
         "name": "' + $vmName + '",
         "location": "' + $Location + '",
         "dependsOn": [
-            "[resourceId(''Microsoft.Network/networkInterfaces/'', ''' + $NetworkInterfaceFragmentObject.name + ''')]"
+            "[resourceId(''Microsoft.Network/networkInterfaces/'', ''' + $NetworkInterface.name + ''')]"
         ],
         "properties": {
             "hardwareProfile": {
@@ -51,7 +51,7 @@ function Get-VirtualMachineTemplateFragment {
             "networkProfile": {
                 "networkInterfaces": [
                     {
-                        "id": "[resourceId(''Microsoft.Network/networkInterfaces/'', ''' + $NetworkInterfaceFragmentObject.name + ''')]"
+                        "id": "[resourceId(''Microsoft.Network/networkInterfaces/'', ''' + $NetworkInterface.name + ''')]"
                     }
                 ]
             }

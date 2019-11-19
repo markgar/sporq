@@ -1,15 +1,15 @@
 . ./_Abbreviations.ps1
 
-function Get-EventHubTemplateFragment {
+function Get-SpqEventHub {
     Param(
         [parameter(Mandatory = $true)] [object] $CommonProperties,
         [parameter(Mandatory = $true)] [string] $Location,
         [parameter(Mandatory = $false)] [string] $UniqueNamePhrase = $null,
         [string] $ExceptionGuid,
-        [parameter(Mandatory = $true)] [object] $EventHubNamespaceFragmentObject
+        [parameter(Mandatory = $true)] [object] $EventHubNamespace
     )
 
-    $eventHubName = Get-ResourceName `
+    $eventHubName = Get-SpqResourceName `
     -CommonProperties $CommonProperties `
     -UniqueNamePhrase $UniqueNamePhrase `
     -ServiceTypeName "Microsoft.EventHub/namespaces/eventhubs" `
@@ -19,10 +19,10 @@ function Get-EventHubTemplateFragment {
     {
         "type": "Microsoft.EventHub/namespaces/eventhubs",
         "apiVersion": "2017-04-01",
-        "name": "' + $EventHubNamespaceFragmentObject.name + '/' + $eventHubName + '",
+        "name": "' + $EventHubNamespace.name + '/' + $eventHubName + '",
         "location": "Central US",
         "dependsOn": [
-        "[resourceId(''Microsoft.EventHub/namespaces'', ''' + $EventHubNamespaceFragmentObject.name + ''')]"
+        "[resourceId(''Microsoft.EventHub/namespaces'', ''' + $EventHubNamespace.name + ''')]"
         ],
         "properties": {
             "messageRetentionInDays": 1,

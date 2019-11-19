@@ -1,5 +1,5 @@
 
-function Get-BaseTemplate {
+function Get-SpqBaseTemplate {
     Param()
 
     $json = '

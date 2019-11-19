@@ -1,6 +1,6 @@
 . ./_Abbreviations.ps1
 
-function Get-NetworkInterfaceTemplateFragment {
+function Get-SpqNetworkInterface {
     Param(
         [parameter(Mandatory = $true)] [object] $CommonProperties,
         [parameter(Mandatory = $true)] [string] $Location,
@@ -9,20 +9,20 @@ function Get-NetworkInterfaceTemplateFragment {
         [parameter(Mandatory = $true)] [string] $VNetResourceGroupName,
         [parameter(Mandatory = $true)] [string] $VNetName,
         [parameter(Mandatory = $true)] [string] $SubnetName,
-        [parameter(Mandatory = $false)] [object] $PublicIPFragmentObject = $null
+        [parameter(Mandatory = $false)] [object] $PublicIP = $null
     )
     
-    $nicName = Get-ResourceName `
+    $nicName = Get-SpqResourceName `
         -CommonProperties $CommonProperties `
         -UniqueNamePhrase $UniqueNamePhrase `
         -ServiceTypeName "Microsoft.Network/networkInterfaces" `
         -Location $Location
         
     # if passed a PublicIpObject, then add the clause for the reference
-    if ($PublicIPFragmentObject) {
+    if ($PublicIP) {
         $publicIpFragment = '
         "publicIPAddress": {
-            "id": "[resourceId(''Microsoft.Network/networkInterfaces/'', ''' + $PublicIPFragmentObject.name + ''')]"
+            "id": "[resourceId(''Microsoft.Network/networkInterfaces/'', ''' + $PublicIP.name + ''')]"
         },
         '
     }

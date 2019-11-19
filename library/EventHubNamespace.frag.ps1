@@ -1,15 +1,15 @@
 . ./_Abbreviations.ps1
 
-function Get-ReferenceToNamespaceAuthorizationRuleKey {
+function Get-SpqReferenceToNamespaceAuthorizationRuleKey {
     Param(
-        [parameter(Mandatory = $true)] [object] $NamespaceAuthorizationRuleFragmentObject
+        [parameter(Mandatory = $true)] [object] $NamespaceAuthorizationRule
     )
 
-    $reference = "[listKeys(resourceId('Microsoft.EventHub/namespaces/AuthorizationRules', '" + $NamespaceAuthorizationRuleFragmentObject.name.Split('/')[0] + "','" + $NamespaceAuthorizationRuleFragmentObject.name.Split('/')[1] + "'), providers('Microsoft.EventHub', 'namespaces/AuthorizationRules').apiVersions[0]).primaryKey]"
+    $reference = "[listKeys(resourceId('Microsoft.EventHub/namespaces/AuthorizationRules', '" + $NamespaceAuthorizationRule.name.Split('/')[0] + "','" + $NamespaceAuthorizationRule.name.Split('/')[1] + "'), providers('Microsoft.EventHub', 'namespaces/AuthorizationRules').apiVersions[0]).primaryKey]"
     return $reference
 }
 
-function Get-EventHubNamespaceTemplateFragment {
+function Get-SpqEventHubNamespace {
     Param(
         [parameter(Mandatory = $true)] [object] $CommonProperties,
         [parameter(Mandatory = $true)] [string] $Location,
@@ -17,7 +17,7 @@ function Get-EventHubNamespaceTemplateFragment {
         [string] $ExceptionGuid
     )
     
-    $eventHubNamespaceName = Get-ResourceName `
+    $eventHubNamespaceName = Get-SpqResourceName `
         -CommonProperties $CommonProperties `
         -UniqueNamePhrase $UniqueNamePhrase `
         -ServiceTypeName "Microsoft.EventHub/namespaces" `
@@ -44,16 +44,16 @@ function Get-EventHubNamespaceTemplateFragment {
 }
 
 
-function Get-EventHubNamespaceAuthorizationRuleTemplateFragement {
+function Get-SpqEventHubNamespaceAuthorizationRule {
     Param(
         [parameter(Mandatory = $true)] [object] $CommonProperties,
         [parameter(Mandatory = $true)] [string] $Location,
         [parameter(Mandatory = $false)] [string] $UniqueNamePhrase = $null,
         [string] $ExceptionGuid,
-        [parameter(Mandatory = $true)] [object] $EventHubNamespaceObject
+        [parameter(Mandatory = $true)] [object] $EventHubNamespace
     )
 
-    $eventHubNamespaceAuthorizationRuleName = Get-ResourceName `
+    $eventHubNamespaceAuthorizationRuleName = Get-SpqResourceName `
     -CommonProperties $CommonProperties `
     -UniqueNamePhrase $UniqueNamePhrase `
     -ServiceTypeName "Microsoft.EventHub/namespaces/AuthorizationRules" `
@@ -63,10 +63,10 @@ function Get-EventHubNamespaceAuthorizationRuleTemplateFragement {
     {
         "type": "Microsoft.EventHub/namespaces/AuthorizationRules",
         "apiVersion": "2017-04-01",
-        "name": "' + $EventHubNamespaceObject.name + '/' + $eventHubNamespaceAuthorizationRuleName + '",
+        "name": "' + $EventHubNamespace.name + '/' + $eventHubNamespaceAuthorizationRuleName + '",
         "location": "' + $Location + '",
         "dependsOn": [
-            "[resourceId(''Microsoft.EventHub/namespaces'', ''' + $EventHubNamespaceObject.name + ''')]"
+            "[resourceId(''Microsoft.EventHub/namespaces'', ''' + $EventHubNamespace.name + ''')]"
         ],
         "properties": {
             "rights": [

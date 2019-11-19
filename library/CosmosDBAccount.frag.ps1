@@ -1,15 +1,15 @@
 . ./_Abbreviations.ps1
 
-function Get-ReferenceToCosmosKey {
+function Get-SpqReferenceToCosmosDbAccountKey {
     Param(
-        [parameter(Mandatory = $true)] [object] $CosmosFragmentObject
+        [parameter(Mandatory = $true)] [object] $CosmosDbAccount
     )
 
-    $reference = "[listKeys(resourceId('Microsoft.DocumentDB/databaseAccounts', '" + $CosmosFragmentObject.name + "'), providers('Microsoft.DocumentDB', 'databaseAccounts').apiVersions[0]).primaryMasterKey]"
+    $reference = "[listKeys(resourceId('Microsoft.DocumentDB/databaseAccounts', '" + $CosmosDbAccount.name + "'), providers('Microsoft.DocumentDB', 'databaseAccounts').apiVersions[0]).primaryMasterKey]"
     return $reference
 }
 
-function Get-CosmosTemplateFragment {
+function Get-SpqCosmosDbAccount {
     Param(
         [parameter(Mandatory = $true)] [object] $CommonProperties,
         [parameter(Mandatory = $true)] [string] $Location,
@@ -17,7 +17,7 @@ function Get-CosmosTemplateFragment {
         [string] $ExceptionGuid
     )
 
-    $cosmosName = Get-ResourceName `
+    $cosmosName = Get-SpqResourceName `
         -CommonProperties $CommonProperties `
         -UniqueNamePhrase $UniqueNamePhrase `
         -ServiceTypeName "Microsoft.DocumentDB/databaseAccounts" `

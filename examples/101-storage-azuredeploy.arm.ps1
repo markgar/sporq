@@ -21,7 +21,7 @@ function Get-Template {
     $baseTemplate = Get-BaseTemplate
 
     # Create Storage Account
-    $myStorageAccount = Get-StorageTemplateFragment -CommonProperties $commonProperties -Location "centralus" -StorageAccessTier "Standard_LRS" -StorageTier "Standard"
+    $myStorageAccount = Get-SpqStorageAcount -CommonProperties $commonProperties -Location "centralus" -StorageAccessTier "Standard_LRS" -StorageTier "Standard"
     
     # Add to Template
     $baseTemplate.resources += $myStorageAccount
