@@ -13,4 +13,5 @@ jobs:
 
     steps:
     - name: Try Powershell
-      run: pwsh Write-Host "Hello World"
+      run: Write-Host "Hello World"
+      shell: pwsh
