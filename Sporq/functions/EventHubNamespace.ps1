@@ -1,5 +1,3 @@
-. ./_Abbreviations.ps1
-
 function Get-SpqReferenceToNamespaceAuthorizationRuleKey {
     Param(
         [parameter(Mandatory = $true)] [object] $NamespaceAuthorizationRule

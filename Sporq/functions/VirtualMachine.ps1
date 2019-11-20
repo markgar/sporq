@@ -1,5 +1,3 @@
-. ./_Abbreviations.ps1
-
 function Get-SpqVirtualMachine {
     Param(
         [parameter(Mandatory = $true)] [object] $CommonProperties,

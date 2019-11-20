@@ -1,5 +1,3 @@
-. ./_Abbreviations.ps1
-
 function Get-SpqReferenceToStorageKey {
     Param(
         [parameter(Mandatory = $true)] [object] $StorageAccount

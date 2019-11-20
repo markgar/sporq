@@ -1,5 +1,3 @@
-. ./_Abbreviations.ps1
-
 function Get-SpqAppServiceWebSite {
     Param(
         [parameter(Mandatory = $true)] [object] $CommonProperties,

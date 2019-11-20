@@ -1,18 +1,15 @@
-. ./_Abbreviations.ps1
-
-function Get-SpqAppServicePlan {
+function Get-SpqAppServicePlanConsumption {
     Param(
         [parameter(Mandatory = $true)] [object] $CommonProperties,
         [parameter(Mandatory = $true)] [string] $Location,
         [parameter(Mandatory = $false)] [string] $UniqueNamePhrase = $null,
-        [string] $ExceptionGuid,
-        [parameter(Mandatory = $true)] [string] $AppServicePlanSKU
+        [string] $ExceptionGuid
     )
     
     $aspName = Get-SpqResourceName `
         -CommonProperties $CommonProperties `
         -UniqueNamePhrase $UniqueNamePhrase `
-        -ServiceTypeName "Microsoft.Web/serverfarms" `
+        -ServiceTypeName "Microsoft.Web/serverfarms/consumption" `
         -Location $Location
 
     $json = '
@@ -22,9 +19,10 @@ function Get-SpqAppServicePlan {
         "name": "' + $aspName + '",
         "location": "' + $Location + '",
         "sku": {
-            "name": "' + $AppServicePlanSKU + '"
+            "name": "Y1",
+            "tier": "Dynamic"
         },
-        "kind": "app",
+        "kind": "functionapp",
         "properties": {}
     }
     '

@@ -1,5 +1,6 @@
+# Always load the latest version
 Remove-Module Sporq
-Import-Module ./library/Sporq.psm1
+Import-Module ./Sporq/Sporq.psd1 -Force
 
 . ./example-azuredeploy.arm.ps1
 

@@ -1,6 +1,4 @@
-. ./_Abbreviations.ps1
-
-function Get-SpqAppInsights {
+function Get-SpqPublicIpAddress {
     Param(
         [parameter(Mandatory = $true)] [object] $CommonProperties,
         [parameter(Mandatory = $true)] [string] $Location,
@@ -8,23 +6,24 @@ function Get-SpqAppInsights {
         [string] $ExceptionGuid
     )
     
-    $appInsightsName = Get-SpqResourceName `
+    $pipName = Get-SpqResourceName `
         -CommonProperties $CommonProperties `
         -UniqueNamePhrase $UniqueNamePhrase `
-        -ServiceTypeName "microsoft.insights/components" `
+        -ServiceTypeName "Microsoft.Network/publicIPAddresses" `
         -Location $Location
+        
 
     $json = '
     {
-        "type": "microsoft.insights/components",
-        "apiVersion": "2015-05-01",
-        "name": "' + $appInsightsName + '",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2019-09-01",
+        "name": "' + $pipName + '",
         "location": "' + $Location + '",
-        "kind": "web",
+        "sku": {
+            "name": "Basic"
+        },
         "properties": {
-            "Application_Type": "web",
-            "Flow_Type": "Redfield",
-            "Request_Source": "IbizaAIExtension"
+            "publicIPAllocationMethod": "Dynamic"
         }
     }
     '

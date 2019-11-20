@@ -1,5 +1,3 @@
-. ./_Abbreviations.ps1
-
 function Get-SpqReferenceToSearchAdminKey {
     Param(
         [parameter(Mandatory = $true)] [object] $SearchService

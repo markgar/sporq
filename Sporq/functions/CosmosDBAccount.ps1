@@ -1,5 +1,3 @@
-. ./_Abbreviations.ps1
-
 function Get-SpqReferenceToCosmosDbAccountKey {
     Param(
         [parameter(Mandatory = $true)] [object] $CosmosDbAccount

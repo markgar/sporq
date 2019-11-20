@@ -1,5 +1,3 @@
-. ./_Abbreviations.ps1
-
 function Get-SpqNetworkInterface {
     Param(
         [parameter(Mandatory = $true)] [object] $CommonProperties,

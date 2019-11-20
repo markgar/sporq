@@ -1,5 +1,3 @@
-. ./library/_Abbreviations.ps1
-
 function New-SpqResourceGroup {
     Param(
         [parameter(Mandatory = $true)] [object] $CommonProperties,

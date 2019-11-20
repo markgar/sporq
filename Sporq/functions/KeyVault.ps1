@@ -1,5 +1,3 @@
-. ./_Abbreviations.ps1
-
 function Get-SpqKeyVault {
     Param(
         [parameter(Mandatory = $true)] [object] $CommonProperties,

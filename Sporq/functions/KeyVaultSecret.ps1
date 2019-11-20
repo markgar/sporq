@@ -1,5 +1,3 @@
-. ./_Abbreviations.ps1
-
 function Get-SpqKeyVaultSecretName {
     Param(
         [parameter(Mandatory = $true)] [object] $ResourceObject

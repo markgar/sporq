@@ -1,4 +1,3 @@
-
 function Get-SpqBaseTemplate {
     Param()
 
