@@ -3,8 +3,7 @@ name: public nuget pack, push
 on:
   push:
     paths:
-    - 'sporq.nuspec'
-    - '.github/workflows/main-nuget-pub.yml'
+    - 'Sporq/Sporq.psd1'
 
 jobs:
   build:
@@ -12,10 +11,5 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Install NuGet client
-      uses: warrenbuckley/Setup-Nuget@v1
-    - name: Pack NuGet package
-      run: nuget pack sporq.nuspec
-    - name: Push NuGet package
-      run: nuget push *.nupkg -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secrets.sporq_nuget_api_key }} -NoSymbols
+    - name: Run some powershell
+      run: pwsh Write-Host "Hello World"
