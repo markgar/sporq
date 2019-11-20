@@ -1,17 +1,18 @@
 # Sporq
 
-Sporq is an object based ARM Template generator.  Its purpose to make ARM templates creation programmatic,
-include a resource naming convention, make resource access key refreshment easy, because Sporq outputs 
-ARM templates that are completely ready to deploy, make those ARM templates as test-able as possible.
+Sporq is three things:
+- An object based ARM Template generator
+- PowerShell implementation of automated Azure Resource Key Refreshment
+- PowerShell implementation of automated and governed self-service Resource Group creation process
 
 Its purpose is to use PowerShell as the ARM template programming language (rather than the ARM Template expression language) 
-to output ARM templates that are completely ready to deploy without using ARM template parameters or variables.  
+to output ARM templates that are completely ready to deploy because it does not use ARM template parameters or variables.  
 This means a new paradigm for writing ARM templates:
-- Use a programmatic language like PowerShell that hides the complexity of ARM template syntax
-- Implememnt a naming convention with Sporq for your Resource Groups as well as Resources
-- Refresh secrets with with simple scripts included with Sporq
-- Implement cost management using Azure Cost Analytics and Azure Budgets using Resource Group creation in Sporq
-- Easily test ARM templates for enterprise security requirements becuase there are no variables and parameters
+- Use a programmatic language like PowerShell simplifies ARM template definition while hiding the complexity of ARM template syntax
+- Simplify the process of implememnting a naming convention for your Resource Groups as well as Resources
+- Set up automated Resource Key refreshment using Sporq
+- Deploy cost management across your Azure deployments using Azure Cost Analytics and Azure Budgets
+- Easily test ARM templates for enterprise security requirements during the build phase of infrastructure deployment
 
 ## Installation
 

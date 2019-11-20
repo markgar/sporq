@@ -1,6 +1,6 @@
 # Testing your templates
-**Sporq** comes with some automated tests built in, ready to go.  They are built with a technology called Pester that provides syntax to perform assertions in Powershell and then export those test results to NUnitXml so they can be picked up by most pipeline tools, such as Azure Devops.
+Because of the way Sporq creates ARM templates that are completely finished with no evaluation required on by the Azure ARM service, Sqorq created templates are completely test-able.  ARM templates that still include ARM template syntax, such as Variables and Parameters are only completely rendered when submitted for deployment to the ARM Api.
 
-This means that when you run your pipeline, you'll perform 2 steps.  First is the creation of the ARM template via the PowerShell Sporq code, then test it using Pester.
+This is compatible with using somethink like Pester.
 
-When Pester runs and executes the tests, the tests load up your ARM template and look for certain values in specific places.  For instance, you can look to see if HTTPS is required on Storage accounts.  See Storage.Tests.ps1 to see this example.
+Sporq includes a strategy for requesting an exemption to a Pester test.
