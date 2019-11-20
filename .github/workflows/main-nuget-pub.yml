@@ -20,7 +20,7 @@ jobs:
         $dir = Get-ChildItem
         Write-Host $dir
         Write-Host $env:PSModulePath
-        $env:PSModulePath = $env:PSModulePath + ":/home/runner/work/_temp/"+  ":" $pwd
+        $env:PSModulePath = $env:PSModulePath + ":/home/runner/work/_temp/" +  ":" + $pwd
         Write-Host $env:PSModulePath
         Import-Module ./Sporq/Sporq.psd1 -Force
         Publish-Module -Name 'Sporq' -NuGetApiKey '${{ secrets.sporq_powershell_gallery_api_key }}'
