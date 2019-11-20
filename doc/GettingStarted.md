@@ -5,8 +5,11 @@ After you have installed PowerShellGet, open a PowerShell prompt and run:
 ```powershell
 Install-Module -Name 'Sporq'
 ```
-
-Once you've done this, you'll be ready to being writing Sporq code.
+If you'd like to see the module you just installed and the version, use Get-Module.
+```powershell
+Get-Module
+```
+Once you've done this, you'll be ready to begin writing **Sporq** code.
 
 Create a file called ```create-arm-template.ps1```
 Add this code to the file:
