@@ -4,6 +4,7 @@ on:
   push:
     paths:
     - 'Sporq/Sporq.psd1'
+    - '.github/workflows/main-nuget-pub.yml'
 
 jobs:
   build:
@@ -11,5 +12,5 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Run some powershell
+    - name: Try Powershell
       run: pwsh Write-Host "Hello World"
