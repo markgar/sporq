@@ -15,6 +15,9 @@ jobs:
     - uses: actions/checkout@v1
     - name: Create Module, Push to Gallery
       run: |
+        Write-Host $env:PSModulePath
+        $env:PSModulePath = $env:PSModulePath + ":/sporq/sporq"
+        Write-Host $env:PSModulePath
         Import-Module ./Sporq/Sporq.psd1
         Publish-Module -Name 'Sporq' -NuGetApiKey '${{ secrets.sporq_powershell_gallery_api_key }}'
       shell: pwsh
