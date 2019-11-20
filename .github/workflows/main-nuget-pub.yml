@@ -12,8 +12,10 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Try Powershell
+    - name: Create Module, Push to Gallery
       run: |
         Write-Host "Hello World"
+        Import-Module ./Sporq/Sporq.psd1
+        Publish-Module -Name 'Sporq' -NuGetApiKey
         Write-Host "Hello World2"
       shell: pwsh
