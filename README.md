@@ -10,33 +10,31 @@
 - You want to perform 'unit tests' on arm templates to ensure security and policy adherence as early as possible in the development cycle: during the build phase.
 
 # Getting to know Sporq
-**Sporq** is a powershell library delivered to you via a public [nuget.org](https://www.nuget.org/packages/Sporq/) package that makes the creation and testing of arm templates easier.  You'll declare variables and use pre-built functions to retrieve arm template fragments.  These fragments can be aggregated together to create an arm template object that can be finally exported to a ready-to-deploy arm template json file.
-
-By the way - there are two ways to use **Sporq**.  The quickest is to use the public nuget package.  This includes template fragments and tests that are ready to go.  But if you'd like to customize these artifacts, you can do that too.  See [Customizing Sporq for Your Enterprise](doc/CustomizeSporq.md).
+**Sporq** is a powershell library delivered to you via a public [PowerShell Gallery Module](https://www.powershellgallery.com/packages/Sporq/) that makes the creation and testing of arm templates easy.  You'll declare variables and use pre-built functions to retrieve objects representing ARM resources.  These objects can be aggregated together to create an object representing the whole ARM template that can be finally exported to a ready-to-deploy ARM template json file.
 
 When you use **Sporq**, you first retrieve an object that represents and empty arm template.
 ```powershell
 # Create an empty base arm template
-$baseTemplate = Get-BaseTemplate
+$baseTemplate = Get-SpqBaseTemplate
 ```
 
-This function, `Get-BaseTemplate` is profided by the framework and returns an object.
+This function, `Get-SpqBaseTemplate` is provided by the framework and returns an object.
 
-The next thing is to retrieve an object that represents the infrastructure you'd like to add to the arm template.
+The next step is to retrieve objects that represents the infrastructure you'd like to add to the ARM template.
 ```powershell
 # Create a storage account fragment
-$aStorageAccount = Get-StorageTemplateFragment -CommonProperties $commonProperties -Location "centralus" -StorageAccessTier "Standard_RAGRS" -StorageTier "Standard"
+$myStorageAccount = Get-SqpStorageAccount -CommonProperties $commonProperties -Location "centralus" -StorageAccessTier "Standard_RAGRS" -StorageTier "Standard"
 ```
 
 Now that you have the Azure Storage Account object, you add it to your base template like this:
 ```powershell
 # Add it to the template
-$baseTemplate.resources += $aStorageAccount
+$baseTemplate.resources += $myStorageAccount
 ```
 
-There are more functions like `Get-StorageTemplateFragment` for other objects such as `Get-EventHubNamespaceTemplateFragment`.  You'll also use `Get-KeyVaultTemplateFragment` to create a Key Vault where you can store secrets.  You can learn how to do this with **Sporq** by reading [Storing Secrets in Key Vault](doc/RefreshingKeys.md).
+There are more functions like `Get-SpqStorageAccount` for other objects such as `Get-SpqEventHubNamespace`.  You'll also use `Get-SpqKeyVault` to create a Key Vault where you can store secrets.  You can learn how to do this with **Sporq** by reading [Storing Secrets in Key Vault](doc/RefreshingKeys.md).
 
-Because of the way Sporq convention works, it is easy to use this both on your local machine, and also in an Azure Dev Ops pipeline.  You'll learm more about how the boilerplate code works to enable this convention.  If you want to customize the arm template fragments or the tests that inside Sporq, see [Custimizing Sporq for Your Enterprise](doc/CustomizeSporq.md).
+Because of the way Sporq convention works, it is easy to use this on your local machine, in an Azure Dev Ops pipeline, as well as GitHub Actions.  If you want to customize the arm template fragments or the tests that inside Sporq, see [Custimizing Sporq for Your Enterprise](doc/CustomizeSporq.md).
 
 # More Cool Stuff
 - If you'd like to get going with **Sporq**, check out the [Getting Started](doc/GettingStarted.md) document.  

@@ -13,7 +13,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: Create Module, Push to Gallery
+    - name: Create Module, Push to PSGallery
       run: |
         $env:PSModulePath = $env:PSModulePath + ":" + $pwd
         Write-Host $env:PSModulePath
