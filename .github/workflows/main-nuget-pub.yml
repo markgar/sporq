@@ -15,11 +15,6 @@ jobs:
     - uses: actions/checkout@v1
     - name: Create Module, Push to Gallery
       run: |
-        $pwd = Get-Location
-        Write-Host $pwd
-        $dir = Get-ChildItem
-        Write-Host $dir
-        Write-Host $env:PSModulePath
         $env:PSModulePath = $env:PSModulePath + ":" + $pwd
         Write-Host $env:PSModulePath
         Import-Module ./Sporq/Sporq.psd1 -Force
