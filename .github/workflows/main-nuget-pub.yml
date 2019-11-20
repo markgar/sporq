@@ -1,4 +1,4 @@
-name: public nuget pack, push
+name: Create Module, Push to Powershell Gallery
 
 on:
   push:
@@ -13,5 +13,7 @@ jobs:
 
     steps:
     - name: Try Powershell
-      run: Write-Host "Hello World"
+      run: |
+        Write-Host "Hello World"
+        Write-Host "Hello World2"
       shell: pwsh
