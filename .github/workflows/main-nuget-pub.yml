@@ -14,8 +14,10 @@ jobs:
     steps:
     - name: Create Module, Push to Gallery
       run: |
-        Get-Location
-        Get-ChildItem
+        $loc = Get-Location
+        Write-Host $loc
+        $dir = Get-ChildItem
+        Write-Host $dir
         Import-Module ./Sporq/Sporq.psd1
         Publish-Module -Name 'Sporq' -NuGetApiKey
         Write-Host "Hello World2"
