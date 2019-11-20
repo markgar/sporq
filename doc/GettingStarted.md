@@ -1,5 +1,5 @@
 # Getting Started with Sporq
-Getting started with **Sporq** is easy.  It is delivered as a [PowerShell Gallery Module](https://www.powershellgallery.com/packages/Sporq/).  If you've never used the PowerShell Gallery, you might need to install [PowerShellGet](https://docs.microsoft.com/en-us/powershell/scripting/gallery/installing-psget?view=powershell-6) which allows you to pull modules from the PowerShell Gallery.
+Getting started with **Sporq** is easy.  It is delivered as a [PowerShell Gallery Module](https://www.powershellgallery.com/packages/Sporq).  If you've never used the PowerShell Gallery, you might need to install [PowerShellGet](https://docs.microsoft.com/en-us/powershell/scripting/gallery/installing-psget?view=powershell-6) which allows you to pull modules from the PowerShell Gallery.
 
 After you have installed PowerShellGet, open a PowerShell prompt and run:
 ```powershell
