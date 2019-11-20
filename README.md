@@ -1,45 +1,51 @@
-# Introduction 
-**Sporq** is a governance framework that includes things like a programmatic way to [create arm templates](doc/GettingStarted.md), a [naming convention](doc/NamingConvention.md), [secret management and rotation](doc/RefreshingKeys.md) right from the start, [cost management](doc/ResourceGroups.md) by default, and a framework to [security-test arm templates](doc/Testing.md) before they are deployed.
+# Sporq
 
-**Sporq** is for you if:
-- You want to get going fast and don't mind using a governance strategy that is _pre-built_ (it is ready go right now - no changes needed), _opinionated_ (there is a certian way of doing things), and _prescriptive_ (focused on getting things done rather than discussing options)
-- Your skillset doesn't include arm template creation
-- You want to store secrets in Key Vault by default and rotate them regularly
-- You want to follow a naming convention
-- You think cost governanace is an important part of utilizing the cloud
-- You want to perform 'unit tests' on arm templates to ensure security and policy adherence as early as possible in the development cycle: during the build phase.
+Sporq is an object based ARM Template generator.  Its purpose to make ARM templates creation programmatic,
+include a resource naming convention, make resource access key refreshment easy, because Sporq outputs 
+ARM templates that are completely ready to deploy, make those ARM templates as test-able as possible.
 
-# Getting to know Sporq
-**Sporq** is a powershell library delivered to you via a public [PowerShell Gallery Module](https://www.powershellgallery.com/packages/Sporq/) that makes the creation and testing of arm templates easy.  You'll declare variables and use pre-built functions to retrieve objects representing ARM resources.  These objects can be aggregated together to create an object representing the whole ARM template that can be finally exported to a ready-to-deploy ARM template json file.
+Its purpose is to use PowerShell as the ARM template programming language (rather than the ARM Template expression language) 
+to output ARM templates that are completely ready to deploy without using ARM template parameters or variables.  
+This means a new paradigm for writing ARM templates:
+- Use a programmatic language like PowerShell that hides the complexity of ARM template syntax
+- Implememnt a naming convention with Sporq for your Resource Groups as well as Resources
+- Refresh secrets with with simple scripts included with Sporq
+- Implement cost management using Azure Cost Analytics and Azure Budgets using Resource Group creation in Sporq
+- Easily test ARM templates for enterprise security requirements becuase there are no variables and parameters
 
-When you use **Sporq**, you first retrieve an object that represents and empty arm template.
-```powershell
-# Create an empty base arm template
-$baseTemplate = Get-SpqBaseTemplate
+## Installation
+
+If you have the [PowerShellGet](https://msdn.microsoft.com/powershell/gallery/readme) module installed
+you can enter the following command:
+
+```PowerShell
+Install-Module Sporq
 ```
 
-This function, `Get-SpqBaseTemplate` is provided by the framework and returns an object.
+Alternatively you can download a ZIP file of the latest version from our [Releases](https://github.com/markgar/sporq/releases)
+page.
 
-The next step is to retrieve objects that represents the infrastructure you'd like to add to the ARM template.
-```powershell
-# Create a storage account fragment
-$myStorageAccount = Get-SqpStorageAccount -CommonProperties $commonProperties -Location "centralus" -StorageAccessTier "Standard_RAGRS" -StorageTier "Standard"
-```
+## Documentation
 
-Now that you have the Azure Storage Account object, you add it to your base template like this:
-```powershell
-# Add it to the template
-$baseTemplate.resources += $myStorageAccount
-```
+You can learn how to use Sporq to write your own ARM templates by reading our documentation:
 
-There are more functions like `Get-SpqStorageAccount` for other objects such as `Get-SpqEventHubNamespace`.  You'll also use `Get-SpqKeyVault` to create a Key Vault where you can store secrets.  You can learn how to do this with **Sporq** by reading [Storing Secrets in Key Vault](doc/RefreshingKeys.md).
+- [Introduction to Sporq](docs/Introduction.md)
+- [Getting Started](docs/GettingStarted.md)
+- [Refreshing Keys](docs/RefreshingKeys.md)
+- [Testing Your Templates](docs/Testing.md)
+- [Managing Resource Group Creation](docs/ResourceGroups.md)
+- [Naming Convention](NamingConvention.md)
+- [Customizing Sporq for your enterprise](CustomizeSporq.md)
+- [Cmdlet Documentation]()
 
-Because of the way Sporq convention works, it is easy to use this on your local machine, in an Azure Dev Ops pipeline, as well as GitHub Actions.  If you want to customize the arm template fragments or the tests that inside Sporq, see [Custimizing Sporq for Your Enterprise](doc/CustomizeSporq.md).
+Or by watching:
 
-# More Cool Stuff
-- If you'd like to get going with **Sporq**, check out the [Getting Started](doc/GettingStarted.md) document.  
-- Sporq makes it easy to refresh keys in your resources.  See the [Refreshing Keys](doc/RefreshingKeys.md) document for more information. 
-- If you want to know more about how **Sporq** enables testing - including security testing, check out [Testing Your Templates](doc/Testing.md).  
-- **Sporq** is part of a larger governance strategey.  If you'd like to know more, check out [Governance Strategy](doc/GovernanceStrategy.md).  
-- If you'd like to contribute, check out [Contributions](doc/Contributions.md).  
-- If you're interested in customizing Sporq to suit your enterprise needs, this is straight forward.  You can can create your own private nuget package with templates customized by you with tests customized by you.  You can check out more on how to do this at [Customizing Sporq for Your Enterprise](doc/CustomizeSporq.md). 
+- [Working with Plaster Presentation](https://youtu.be/16CYGTKH73U) by David Christian - [@dchristian3188](https://github.com/dchristian3188)
+
+## Maintainers
+
+- [Mark Garner](https://github.com/markgar) - [@mgarner](http://twitter.com/mgarner)
+
+## License
+
+This project is [licensed under the MIT License](LICENSE).
