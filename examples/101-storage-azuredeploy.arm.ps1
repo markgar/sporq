@@ -14,7 +14,4 @@ $myStorageAccount = Get-SpqStorageAcount -CommonProperties $commonProperties -Lo
 $baseTemplate.resources += $myStorageAccount
 
 # convert the template object to a json string
-$templateJson = $baseTemplate | ConvertTo-Json -Depth 10
-
-# write the json string out to file
-$templateJson | Out-File -FilePath $TemplateOutputPath
+$baseTemplate | ConvertTo-Json -Depth 10
