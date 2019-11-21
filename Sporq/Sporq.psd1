@@ -30,7 +30,7 @@
     Copyright         = '(c) Mark Garner. All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description = 'Sporq is the multi-tool for Azure Gorvernance'
+    Description       = 'Sporq is the multi-tool for Azure Gorvernance'
 
     # Minimum version of the PowerShell engine required by this module
     # PowerShellVersion = ''
@@ -83,7 +83,8 @@
         './functions/PublicIpAddress.ps1',
         './functions/SearchService.ps1',
         './functions/StorageAccount.ps1',
-        './functions/VirtualMachine.ps1'
+        './functions/VirtualMachine.ps1',
+        './functions/Get-SpqPesterTests.ps1'
     )
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
@@ -105,7 +106,9 @@
     # ModuleList = @()
 
     # List of all files packaged with this module
-    # FileList = @()
+    FileList          = @(
+        './tests/AppServiceWebSite.Tests.txt',
+        './tests/Storage.Tests.txt')
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
     PrivateData       = @{
