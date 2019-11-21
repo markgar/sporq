@@ -1,12 +1,12 @@
 Write-Host "Generating Template..."
 
 # Declare your common properties
-$commonProperties = Get-CommonProperties
+$commonProperties = Get-SpqCommonProperties
 $commonProperties.EnvironmentName = "dev"
 $commonProperties.ApplicationCode = "q4k"
 
 # Grab an empty base template
-$baseTemplate = Get-BaseTemplate
+$baseTemplate = Get-SpqBaseTemplate
 
 
 # Create Key Vault
