@@ -33,8 +33,7 @@ function Get-Template {
         -CommonProperties $commonProperties `
         -Location "centralus" `
         -ExceptionGuid "f354adb1-429c-4c83-b6bd-de6012358b33" `
-        -StorageAccessTier "Standard_LRS" `
-        -StorageTier "Standard"
+        -StorageAccessTier "Standard_LRS" 
     $baseTemplate.resources += $myStorageAccount
     
     $storageKeyVaultSecret = Get-SpqKeyVaultSecret `

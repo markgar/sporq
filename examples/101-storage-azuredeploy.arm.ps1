@@ -7,7 +7,7 @@ $commonProperties.ApplicationCode = "q4k"
 $baseTemplate = Get-SpqBaseTemplate
 
 # Create Storage Account
-$myStorageAccount = Get-SpqStorageAccount -CommonProperties $commonProperties -Location "centralus" -StorageAccessTier "Standard_LRS" -StorageTier "Standard"
+$myStorageAccount = Get-SpqStorageAccount -CommonProperties $commonProperties -Location "centralus" -StorageAccessTier "Standard_LRS"
 Write-Host $myStorageAccount
 # Add to Template
 $baseTemplate.resources += $myStorageAccount

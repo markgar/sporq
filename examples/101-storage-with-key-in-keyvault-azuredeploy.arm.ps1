@@ -16,7 +16,7 @@ $baseTemplate.resources += $keyVault
 
 
 # Create Storage Account
-$myStorageAccount = Get-SpqStorageAccount -CommonProperties $commonProperties -Location "centralus" -StorageAccessTier "Standard_LRS" -StorageTier "Standard"
+$myStorageAccount = Get-SpqStorageAccount -CommonProperties $commonProperties -Location "centralus" -StorageAccessTier "Standard_LRS"
 # Add to Template
 $baseTemplate.resources += $myStorageAccount
 
