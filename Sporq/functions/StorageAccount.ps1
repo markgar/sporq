@@ -13,8 +13,7 @@ function Get-SpqStorageAccount {
         [parameter(Mandatory = $true)] [string] $Location,
         [parameter(Mandatory = $false)] [string] $UniqueNamePhrase = $null,
         [string] $ExceptionGuid,
-        [parameter(Mandatory = $true)] [string] $StorageAccessTier,
-        [parameter(Mandatory = $true)] [string] $StorageTier
+        [parameter(Mandatory = $true)] [string] $StorageAccessTier
     )
 
     $storageName = Get-SpqResourceName `
@@ -30,8 +29,7 @@ function Get-SpqStorageAccount {
         "name": "' + $storageName + '",
         "location": "' + $Location + '",
         "sku": {
-            "name": "' + $StorageAccessTier + '",
-            "tier": "' + $StorageTier + '"
+            "name": "' + $StorageAccessTier + '"
         },
         "kind": "StorageV2",
         "properties": {
