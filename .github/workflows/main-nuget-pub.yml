@@ -12,7 +12,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
+    
+    - name: Perform Checkout
+      uses: actions/checkout@v1
+    
     - name: Create Module, Push to PSGallery
       run: |
         $env:PSModulePath = $env:PSModulePath + ":" + $pwd
