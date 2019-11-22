@@ -1,3 +1,6 @@
+function Get-SpqAppServiceWebSiteTests {
+
+    $testCode = '
 param (
     [Parameter(Mandatory = $true)]
     [string]$TemplatePath 
@@ -28,11 +31,11 @@ foreach ($resource in $resourcesToTest) {
         }
     }
 
-    Describe 'Micrsoft/Storage Validation' {
+    Describe "Micrsoft/Storage Validation" {
   
-        Context 'Security Tests' {
+        Context "Security Tests" {
       
-            if (!$exceptionArray.Contains('3381100b-f753-4653-aea2-8fd117acfa57')) {
+            if (!$exceptionArray.Contains("3381100b-f753-4653-aea2-8fd117acfa57")) {
                 It "Requires Https on to be true" {
                     $expectedValue = $true
                     $templateProperty = $resource.properties.httpsOnly
@@ -49,4 +52,7 @@ foreach ($resource in $resourcesToTest) {
         }
       
     }
+}
+'
+return $testCode
 }

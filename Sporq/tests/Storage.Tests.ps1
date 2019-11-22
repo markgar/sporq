@@ -1,3 +1,6 @@
+function Get-SpqStorageAccountTests {
+
+    $testCode = '
 param (
     [Parameter(Mandatory = $true)]
     [string]$TemplatePath 
@@ -28,9 +31,9 @@ foreach ($resource in $resourcesToTest) {
         }
     }
 
-    Describe 'Micrsoft/Storage Validation' {
+    Describe "Micrsoft/Storage Validation" {
 
-        Context 'Naming Tests' {
+        Context "Naming Tests" {
       
             It "Requires Name Length < 25" {
                 $expectedValue = 25
@@ -41,9 +44,9 @@ foreach ($resource in $resourcesToTest) {
         }
 
 
-        Context 'Security Tests' {
-      
-            if (!$exceptionArray.Contains('c060eaba-feef-411c-b527-637f246fd781')) {
+        Context "Security Tests" {
+     
+            if (!$exceptionArray.Contains("c060eaba-feef-411c-b527-637f246fd781")) {
                 It "Requires Blob Encryption Be Turned On" {
                     $expectedValue = $true
                     $templateProperty = $resource.properties.encryption.services.blob.enabled
@@ -63,7 +66,7 @@ foreach ($resource in $resourcesToTest) {
             }
 
 
-            if (!$exceptionArray.Contains('55f0b481-bea5-4b4f-9c93-d33b3d7cc981')) {
+            if (!$exceptionArray.Contains("55f0b481-bea5-4b4f-9c93-d33b3d7cc981")) {
                 It "Supports HTTPS Traffic Only" {
                     $expectedValue = $true
                     $templateProperty = $resource.properties.supportsHttpsTrafficOnly
@@ -76,7 +79,7 @@ foreach ($resource in $resourcesToTest) {
                 }     
             }
 
-            if (!$exceptionArray.Contains('f354adb1-429c-4c83-b6bd-de6012358b33')) {
+            if (!$exceptionArray.Contains("f354adb1-429c-4c83-b6bd-de6012358b33")) {
                 It "Requires RAGRS Storage Type" {
                     $expectedValue = "Standard_RAGRS"
                     $templateProperty = $resource.sku.name
@@ -93,4 +96,6 @@ foreach ($resource in $resourcesToTest) {
         }
       
     }
+'
+return $testCode
 }
