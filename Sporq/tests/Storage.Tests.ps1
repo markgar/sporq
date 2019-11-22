@@ -35,67 +35,55 @@ foreach ($resource in $resourcesToTest) {
 
         Context "Naming Tests" {
       
-            It "Requires Name Length < 25" {
-                $expectedValue = 25
-                $lengthOfName = $resource.name.Length
-                $assertion = $lengthOfName -lt $expectedValue
-                $assertion | Should Be $true
+            It "Requires Name Length < 25 for resource: $($resource.name)" {
+                $resource.name.Length -lt 25 | Should Be $true
             }
         }
 
 
         Context "Security Tests" {
      
-            if (!$exceptionArray.Contains("c060eaba-feef-411c-b527-637f246fd781")) {
-                It "Requires Blob Encryption Be Turned On" {
-                    $expectedValue = $true
-                    $templateProperty = $resource.properties.encryption.services.blob.enabled
-                    $templateProperty | Should Be $expectedValue
+   
+            It "Requires Blob Encryption Be Turned On for resource: $($resource.name)" {
+                
+                # if we encounter an exception for this test in the ARM template, mark the test as Skipped
+                if ($exceptionArray.Contains("c060eaba-feef-411c-b527-637f246fd781")) {
+                    Set-ItResult -Skipped -Because "Exception Encountered"
                 }
-            }
-            else {
-                It "Requires Blob Encryption Be Turned On {{{Excepted}}}" {
-                    1 | Should Be 1
-                }     
-            }
 
-            It "Requires File Encryption Be Turned On" {
-                $expectedValue = $true
-                $templateProperty = $resource.properties.encryption.services.file.enabled
-                $templateProperty | Should Be $expectedValue
+                $resource.properties.encryption.services.blob.enabled | Should Be $true
+            }
+   
+            It "Requires File Encryption Be Turned On for resource: $($resource.name)" {
+                $resource.properties.encryption.services.file.enabled | Should Be $true
             }
 
 
-            if (!$exceptionArray.Contains("55f0b481-bea5-4b4f-9c93-d33b3d7cc981")) {
-                It "Supports HTTPS Traffic Only" {
-                    $expectedValue = $true
-                    $templateProperty = $resource.properties.supportsHttpsTrafficOnly
-                    $templateProperty | Should Be $expectedValue
-                }      
-            }
-            else {
-                It "Supports HTTPS Traffic Only {{{Excepted}}}" {
-                    1 | Should Be 1
-                }     
-            }
+            It "Supports HTTPS Traffic Only for resource: $($resource.name)" {
+                
+                # if we encounter an exception for this test in the ARM template, mark the test as Skipped
+                if ($exceptionArray.Contains("55f0b481-bea5-4b4f-9c93-d33b3d7cc981")) {
+                    Set-ItResult -Skipped -Because "Exception Encountered"
+                }
 
-            if (!$exceptionArray.Contains("f354adb1-429c-4c83-b6bd-de6012358b33")) {
-                It "Requires RAGRS Storage Type" {
-                    $expectedValue = "Standard_RAGRS"
-                    $templateProperty = $resource.sku.name
-                    $templateProperty | Should Be $expectedValue
-                }      
-            }
-            else {
-                It "Requires RAGRS Storage Type {{{Excepted}}}" {
-                    1 | Should Be 1
-                }     
-            }
+                $resource.properties.supportsHttpsTrafficOnly | Should Be $true
+            }    
 
+
+            It "Requires RAGRS Storage Type for resource: $($resource.name)" {
+
+                # if we encounter an exception for this test in the ARM template, mark the test as Skipped
+                if ($exceptionArray.Contains("f354adb1-429c-4c83-b6bd-de6012358b33")) {
+                    Set-ItResult -Skipped -Because "Exception Encountered"
+                }
+                
+                $resource.sku.name | Should Be "Standard_RAGRS"
+            }
 
         }
       
     }
+}
 '
-return $testCode
+    return $testCode
 }

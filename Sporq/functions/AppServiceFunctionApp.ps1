@@ -22,6 +22,7 @@ function Get-SpqAppServiceFunctionApp {
         "location": "' + $Location + '",
         "kind": "functionapp",
         "properties": {
+            "httpsOnly": true,
             "serverFarmId": "[resourceId(''Microsoft.Web/serverfarms'', ''' + $AppServicePlan.name + ''')]"
         },
         "dependsOn": [

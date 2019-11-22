@@ -35,19 +35,16 @@ foreach ($resource in $resourcesToTest) {
   
         Context "Security Tests" {
       
-            if (!$exceptionArray.Contains("3381100b-f753-4653-aea2-8fd117acfa57")) {
-                It "Requires Https on to be true" {
-                    $expectedValue = $true
-                    $templateProperty = $resource.properties.httpsOnly
-                    $templateProperty | Should Be $expectedValue
-                }
-            }
-            else {
-                It "Requires Https on to be true {{{Excepted}}}" {
-                    1 | Should Be 1
-                }     
-            }
 
+            It "Requires Https on to be true on for resource: $($resource.name)" {
+                
+                # if we encounter an exception for this test in the ARM template, mark the test as Skipped
+                if ($exceptionArray.Contains("3381100b-f753-4653-aea2-8fd117acfa57")) {
+                    Set-ItResult -Skipped -Because "Exception Encountered"
+                }
+
+                $resource.properties.httpsOnly | Should Be $true
+            }
 
         }
       
