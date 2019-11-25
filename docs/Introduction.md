@@ -32,17 +32,17 @@ Now that you have the Azure Storage Account object, you add it to your base temp
 $baseTemplate.resources += $myStorageAccount
 ```
 
-There are more functions like `Get-SpqStorageAccount` for other objects such as `Get-SpqEventHubNamespace`.  You'll also use `Get-SpqKeyVault` to create a Key Vault where you can store secrets.  You can learn how to do this with **Sporq** by reading [Storing Secrets in Key Vault](doc/RefreshingKeys.md).
+There are more functions like `Get-SpqStorageAccount` for other objects such as `Get-SpqEventHubNamespace`.  You'll also use `Get-SpqKeyVault` to create a Key Vault where you can store secrets.  You can learn how to do this with **Sporq** by reading [Storing Secrets in Key Vault](RefreshingKeys.md).
 
-Because of the way Sporq convention works, it is easy to use this on your local machine, in an Azure Dev Ops pipeline, as well as GitHub Actions.  If you want to customize the arm template fragments or the tests that inside Sporq, see [Custimizing Sporq for Your Enterprise](doc/CustomizeSporq.md).
+Because of the way Sporq convention works, it is easy to use this on your local machine, in an Azure Dev Ops pipeline, as well as GitHub Actions.  If you want to customize the arm template fragments or the tests that inside Sporq, see [Custimizing Sporq for Your Enterprise](CustomizeSporq.md).
 
 # More Cool Stuff
-- If you'd like to get going with **Sporq**, check out the [Getting Started](doc/GettingStarted.md) document.  
-- Sporq makes it easy to refresh keys in your resources.  See the [Refreshing Keys](doc/RefreshingKeys.md) document for more information. 
-- If you want to know more about how **Sporq** enables testing - including security testing, check out [Testing Your Templates](doc/Testing.md).  
-- **Sporq** is part of a larger governance strategey.  If you'd like to know more, check out [Governance Strategy](doc/GovernanceStrategy.md).  
-- If you'd like to contribute, check out [Contributions](doc/Contributions.md).  
-- If you're interested in customizing Sporq to suit your enterprise needs, this is straight forward.  You can can create your own private nuget package with templates customized by you with tests customized by you.  You can check out more on how to do this at [Customizing Sporq for Your Enterprise](doc/CustomizeSporq.md). 
+- If you'd like to get going with **Sporq**, check out the [Getting Started](GettingStarted.md) document.  
+- Sporq makes it easy to refresh keys in your resources.  See the [Refreshing Keys](RefreshingKeys.md) document for more information. 
+- If you want to know more about how **Sporq** enables testing - including security testing, check out [Testing Your Templates](Testing.md).  
+- **Sporq** is part of a larger governance strategey.  If you'd like to know more, check out [Governance Strategy](GovernanceStrategy.md).  
+- If you'd like to contribute, check out [Contributions](Contributions.md).  
+- If you're interested in customizing Sporq to suit your enterprise needs, this is straight forward.  You can can create your own private nuget package with templates customized by you with tests customized by you.  You can check out more on how to do this at [Customizing Sporq for Your Enterprise](CustomizeSporq.md). 
 
 # What's Next?
 The next step is to [get started](GettingStarted.md).
