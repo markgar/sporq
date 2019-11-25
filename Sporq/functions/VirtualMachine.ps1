@@ -1,6 +1,7 @@
 function Get-SpqVirtualMachine {
     Param(
-        [parameter(Mandatory = $true)] [object] $CommonProperties,
+        [parameter(Mandatory = $true)] [string] $ApplicationCode,
+        [parameter(Mandatory = $true)] [string] $EnvironmentName,
         [parameter(Mandatory = $true)] [string] $Location,
         [parameter(Mandatory = $false)] [string] $UniqueNamePhrase = $null,
         [string] $ExceptionGuid,
@@ -11,7 +12,8 @@ function Get-SpqVirtualMachine {
     )
     
     $vmName = Get-SpqResourceName `
-        -CommonProperties $CommonProperties `
+        -ApplicationCode $ApplicationCode `
+        -EnvironmentName $EnvironmentName `
         -UniqueNamePhrase $UniqueNamePhrase `
         -ServiceTypeName "Microsoft.Compute/virtualMachines" `
         -Location $Location

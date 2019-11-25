@@ -1,6 +1,7 @@
 function New-SpqResourceGroup {
     Param(
-        [parameter(Mandatory = $true)] [object] $CommonProperties,
+        [parameter(Mandatory = $true)] [string] $ApplicationCode,
+        [parameter(Mandatory = $true)] [string] $EnvironmentName,
         [parameter(Mandatory = $true)] [string] $Location,
         [parameter(Mandatory = $false)] [string] $UniqueNamePhrase = $null,
         [parameter(Mandatory = $true)] [object] $Tags,
@@ -10,7 +11,8 @@ function New-SpqResourceGroup {
     )
     
     $resourceGroupName = Get-SpqResourceName `
-        -CommonProperties $commonProperties `
+        -ApplicationCode $ApplicationCode `
+        -EnvironmentName $EnvironmentName `
         -UniqueNamePhrase $UniqueNamePhrase `
         -ServiceTypeName "ResourceGroup" `
         -Location "centralus"

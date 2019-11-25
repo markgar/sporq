@@ -9,7 +9,8 @@ function Get-SpqReferenceToStorageKey {
 
 function Get-SpqStorageAccount {
     Param(
-        [parameter(Mandatory = $true)] [object] $CommonProperties,
+        [parameter(Mandatory = $true)] [string] $ApplicationCode,
+        [parameter(Mandatory = $true)] [string] $EnvironmentName,
         [parameter(Mandatory = $true)] [string] $Location,
         [parameter(Mandatory = $false)] [string] $UniqueNamePhrase = $null,
         [string] $ExceptionGuid,
@@ -17,7 +18,8 @@ function Get-SpqStorageAccount {
     )
 
     $storageName = Get-SpqResourceName `
-        -CommonProperties $CommonProperties `
+        -ApplicationCode $ApplicationCode `
+        -EnvironmentName $EnvironmentName `
         -UniqueNamePhrase $UniqueNamePhrase `
         -ServiceTypeName "Microsoft.Storage/storageAccounts" `
         -Location $Location
@@ -63,7 +65,8 @@ function Get-SpqStorageAccount {
 
 function Get-SpqStorageBlobServiceConfig {
     Param(
-        [parameter(Mandatory = $true)] [object] $CommonProperties,
+        [parameter(Mandatory = $true)] [string] $ApplicationCode,
+        [parameter(Mandatory = $true)] [string] $EnvironmentName,
         [parameter(Mandatory = $true)] [string] $Location,
         [parameter(Mandatory = $true)] [object] $StorageAccount,
         [string] $ExceptionGuid

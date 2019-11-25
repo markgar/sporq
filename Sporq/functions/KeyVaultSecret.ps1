@@ -18,7 +18,8 @@ function Get-SpqKeyVaultSecretName {
 
 function Get-SpqKeyVaultSecret {
     Param(
-        [parameter(Mandatory = $true)] [object] $CommonProperties,
+        [parameter(Mandatory = $true)] [string] $ApplicationCode,
+        [parameter(Mandatory = $true)] [string] $EnvironmentName,
         [parameter(Mandatory = $true)] [string] $Location,
         [parameter(Mandatory = $true)] [object] $KeyOwningObject,
         [string] $ExceptionGuid,

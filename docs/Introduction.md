@@ -23,7 +23,7 @@ This function, `Get-SpqBaseTemplate` is provided by the framework and returns an
 The next step is to retrieve objects that represents the infrastructure you'd like to add to the ARM template.
 ```powershell
 # Create a storage account fragment
-$myStorageAccount = Get-SqpStorageAccount -CommonProperties $commonProperties -Location "centralus" -StorageAccessTier "Standard_RAGRS" -StorageTier "Standard"
+$myStorageAccount = Get-SqpStorageAccount -Location "centralus" -StorageAccessTier "Standard_RAGRS" -StorageTier "Standard"
 ```
 
 Now that you have the Azure Storage Account object, you add it to your base template like this:

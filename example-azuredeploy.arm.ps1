@@ -13,10 +13,8 @@ function Get-Template {
     )
     Write-Host "Generating Template..."
 
-    # Declare your common properties
-    $commonProperties = Get-SpqCommonProperties
-    $commonProperties.EnvironmentName = $EnvironmentName
-    $commonProperties.ApplicationCode = "h9x"
+    $environmentName = "dev"
+    $applicationCode = "h9x"
 
     # Grab an empty base template
     $baseTemplate = Get-SpqBaseTemplate
@@ -24,20 +22,22 @@ function Get-Template {
     # Declare some infrastructure
 
     #region Key Vault
-    $keyVault = Get-SpqKeyVault -CommonProperties $commonProperties -Location "centralus" 
+    $keyVault = Get-SpqKeyVault -ApplicationCode $applicationCode -EnvironmentName $environmentName -Location "centralus" 
     $baseTemplate.resources += $keyVault
     #endregion
 
     #region Storage Acount
     $myStorageAccount = Get-SpqStorageAccount `
-        -CommonProperties $commonProperties `
+        -ApplicationCode $applicationCode `
+        -EnvironmentName $environmentName `
         -Location "centralus" `
         -ExceptionGuid "f354adb1-429c-4c83-b6bd-de6012358b33" `
         -StorageAccessTier "Standard_LRS" 
     $baseTemplate.resources += $myStorageAccount
     
     $storageKeyVaultSecret = Get-SpqKeyVaultSecret `
-        -CommonProperties $commonProperties `
+        -ApplicationCode $applicationCode `
+        -EnvironmentName $environmentName `
         -Location "centralus" `
         -KeyVault $keyVault `
         -KeyOwningObject $myStorageAccount
@@ -46,12 +46,14 @@ function Get-Template {
 
     # region Cosmos DB
     $myCosmosDB = Get-SpqCosmosDbAccount `
-        -CommonProperties $commonProperties `
+        -ApplicationCode $applicationCode `
+        -EnvironmentName $environmentName `
         -Location "centralus"
     $baseTemplate.resources += $myCosmosDB
 
     $cosmosKeyVaultSecret = Get-SpqKeyVaultSecret `
-        -CommonProperties $commonProperties `
+        -ApplicationCode $applicationCode `
+        -EnvironmentName $environmentName `
         -Location "centralus" `
         -KeyVault $keyVault `
         -KeyOwningObject $myCosmosDB
@@ -61,21 +63,24 @@ function Get-Template {
 
     # region App Services
     $webTierASP = Get-SpqAppServicePlan `
-        -CommonProperties $commonProperties `
+        -ApplicationCode $applicationCode `
+        -EnvironmentName $environmentName `
         -Location "centralus" `
         -AppServicePlanSKU "S1"
     $baseTemplate.resources += $webTierASP
 
     
     $webTierWebUi = Get-SpqAppServiceWebSite `
-        -CommonProperties $commonProperties `
+        -ApplicationCode $applicationCode `
+        -EnvironmentName $environmentName `
         -Location "centralus" `
         -UniqueNamePhrase "web" `
         -AppServicePlan $webTierASP
     $baseTemplate.resources += $webTierWebUi
 
     $webTierApi = Get-SpqAppServiceWebSite `
-        -CommonProperties $commonProperties `
+        -ApplicationCode $applicationCode `
+        -EnvironmentName $environmentName `
         -Location "centralus" `
         -UniqueNamePhrase "api" `
         -AppServicePlan $webTierASP
@@ -84,14 +89,16 @@ function Get-Template {
 
     # region App Insights
     $appInsights = Get-SpqAppInsights `
-        -CommonProperties $commonProperties `
+        -ApplicationCode $applicationCode `
+        -EnvironmentName $environmentName `
         -Location "centralus"
     $baseTemplate.resources += $appInsights
     # endregion
     
     # region Search
     $mySearchService = Get-SpqSearch `
-        -CommonProperties $commonProperties `
+        -ApplicationCode $applicationCode `
+        -EnvironmentName $environmentName `
         -Location "centralus" `
         -ReplicaCount 1 `
         -PartitionCount 1 `
@@ -99,7 +106,8 @@ function Get-Template {
     $baseTemplate.resources += $mySearchService
 
     $searchKeyVaultSecret = Get-SpqKeyVaultSecret `
-        -CommonProperties $commonProperties `
+        -ApplicationCode $applicationCode `
+        -EnvironmentName $environmentName `
         -Location "centralus" `
         -KeyVault $keyVault `
         -KeyOwningObject $mySearchService
@@ -108,37 +116,43 @@ function Get-Template {
 
     # region Event Hub
     $eventHubNamespace = Get-SpqEventHubNamespace `
-        -CommonProperties $commonProperties `
+        -ApplicationCode $applicationCode `
+        -EnvironmentName $environmentName `
         -Location "centralus"
     $baseTemplate.resources += $eventHubNamespace
 
     $eventHubNamespaceAuthorizationRule = Get-SpqEventHubNamespaceAuthorizationRule `
-        -CommonProperties $commonProperties `
+        -ApplicationCode $applicationCode `
+        -EnvironmentName $environmentName `
         -Location "centralus" `
         -EventHubNamespace $eventHubNamespace
     $baseTemplate.resources += $eventHubNamespaceAuthorizationRule
 
     $namespaceKeyVaultSecret = Get-SpqKeyVaultSecret `
-        -CommonProperties $commonProperties `
+        -ApplicationCode $applicationCode `
+        -EnvironmentName $environmentName `
         -Location "centralus" `
         -KeyVault $keyVault `
         -KeyOwningObject $eventHubNamespaceAuthorizationRule
     $baseTemplate.resources += $namespaceKeyVaultSecret
 
     $eventHub = Get-SpqEventHub `
-        -CommonProperties $commonProperties `
+        -ApplicationCode $applicationCode `
+        -EnvironmentName $environmentName `
         -Location "centralus" `
         -EventHubNamespace $eventHubNamespace
     $baseTemplate.resources += $eventHub
     # endregion
 
     $publicIp = Get-SpqPublicIpAddress `
-        -CommonProperties $commonProperties `
+        -ApplicationCode $applicationCode `
+        -EnvironmentName $environmentName `
         -Location "centralus"
     $baseTemplate.resources += $publicIp
 
     $networkInterface = Get-SpqNetworkInterface `
-        -CommonProperties $commonProperties `
+        -ApplicationCode $applicationCode `
+        -EnvironmentName $environmentName `
         -Location "westus" `
         -VNetResourceGroupName "avm" `
         -VnetName "avm-vnet" `
@@ -147,7 +161,8 @@ function Get-Template {
     $baseTemplate.resources += $networkInterface
 
     $virtualMachine = Get-SpqVirtualMachine `
-        -CommonProperties $commonProperties `
+        -ApplicationCode $applicationCode `
+        -EnvironmentName $environmentName `
         -Location "westus" `
         -VMSize "Standard_A2_v2" `
         -AdminUserName "mgarner-admin" `
@@ -155,10 +170,10 @@ function Get-Template {
         -NetworkInterface $networkInterface
     $baseTemplate.resources += $virtualMachine
 
-    $consumptionASP = Get-SpqAppServicePlanConsumption -CommonProperties $commonProperties -Location "centralus"
+    $consumptionASP = Get-SpqAppServicePlanConsumption -ApplicationCode $applicationCode -EnvironmentName $environmentName -Location "centralus"
     $baseTemplate.resources += $consumptionASP
 
-    $functionApp = Get-SpqAppServiceFunctionApp -CommonProperties $commonProperties -Location "centralus" -AppServicePlan $consumptionASP -StorageAccount $myStorageAccount
+    $functionApp = Get-SpqAppServiceFunctionApp -ApplicationCode $applicationCode -EnvironmentName $environmentName -Location "centralus" -AppServicePlan $consumptionASP -StorageAccount $myStorageAccount
     $baseTemplate.resources += $functionApp
 
     # convert the template object to a json string

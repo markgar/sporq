@@ -1,6 +1,7 @@
 function Get-SpqEventHub {
     Param(
-        [parameter(Mandatory = $true)] [object] $CommonProperties,
+        [parameter(Mandatory = $true)] [string] $ApplicationCode,
+        [parameter(Mandatory = $true)] [string] $EnvironmentName,
         [parameter(Mandatory = $true)] [string] $Location,
         [parameter(Mandatory = $false)] [string] $UniqueNamePhrase = $null,
         [string] $ExceptionGuid,
@@ -8,10 +9,11 @@ function Get-SpqEventHub {
     )
 
     $eventHubName = Get-SpqResourceName `
-    -CommonProperties $CommonProperties `
-    -UniqueNamePhrase $UniqueNamePhrase `
-    -ServiceTypeName "Microsoft.EventHub/namespaces/eventhubs" `
-    -Location $Location
+        -ApplicationCode $ApplicationCode `
+        -EnvironmentName $EnvironmentName `
+        -UniqueNamePhrase $UniqueNamePhrase `
+        -ServiceTypeName "Microsoft.EventHub/namespaces/eventhubs" `
+        -Location $Location
 
     $json = '
     {

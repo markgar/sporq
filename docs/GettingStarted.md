@@ -14,16 +14,11 @@ Once you've done this, you'll be ready to begin writing **Sporq** code.
 Create a file called ```create-arm-template.ps1```
 Add this code to the file:
 ```powershell
-# Declare your common properties
-$commonProperties = Get-SpqCommonProperties
-$commonProperties.EnvironmentName = "dev"
-$commonProperties.ApplicationCode = "q4k"
-
 # Create an empty base template
 $baseTemplate = Get-SpqBaseTemplate
 
 # Create a storage account fragment
-$myStorageAccount = Get-SpqStorageAccount -CommonProperties $commonProperties -Location "centralus" -StorageAccessTier "Standard_RAGRS" -StorageTier "Standard"
+$myStorageAccount = Get-SpqStorageAccount -Location "centralus" -StorageAccessTier "Standard_RAGRS" -StorageTier "Standard"
 
 # Add it to the template
 $baseTemplate.resources += $myStorageAccount

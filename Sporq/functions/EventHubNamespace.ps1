@@ -9,14 +9,16 @@ function Get-SpqReferenceToNamespaceAuthorizationRuleKey {
 
 function Get-SpqEventHubNamespace {
     Param(
-        [parameter(Mandatory = $true)] [object] $CommonProperties,
+        [parameter(Mandatory = $true)] [string] $ApplicationCode,
+        [parameter(Mandatory = $true)] [string] $EnvironmentName,
         [parameter(Mandatory = $true)] [string] $Location,
         [parameter(Mandatory = $false)] [string] $UniqueNamePhrase = $null,
         [string] $ExceptionGuid
     )
     
     $eventHubNamespaceName = Get-SpqResourceName `
-        -CommonProperties $CommonProperties `
+        -ApplicationCode $ApplicationCode `
+        -EnvironmentName $EnvironmentName `
         -UniqueNamePhrase $UniqueNamePhrase `
         -ServiceTypeName "Microsoft.EventHub/namespaces" `
         -Location $Location
@@ -44,7 +46,8 @@ function Get-SpqEventHubNamespace {
 
 function Get-SpqEventHubNamespaceAuthorizationRule {
     Param(
-        [parameter(Mandatory = $true)] [object] $CommonProperties,
+        [parameter(Mandatory = $true)] [string] $ApplicationCode,
+        [parameter(Mandatory = $true)] [string] $EnvironmentName,
         [parameter(Mandatory = $true)] [string] $Location,
         [parameter(Mandatory = $false)] [string] $UniqueNamePhrase = $null,
         [string] $ExceptionGuid,
@@ -52,10 +55,11 @@ function Get-SpqEventHubNamespaceAuthorizationRule {
     )
 
     $eventHubNamespaceAuthorizationRuleName = Get-SpqResourceName `
-    -CommonProperties $CommonProperties `
-    -UniqueNamePhrase $UniqueNamePhrase `
-    -ServiceTypeName "Microsoft.EventHub/namespaces/AuthorizationRules" `
-    -Location $Location
+        -ApplicationCode $ApplicationCode `
+        -EnvironmentName $EnvironmentName `
+        -UniqueNamePhrase $UniqueNamePhrase `
+        -ServiceTypeName "Microsoft.EventHub/namespaces/AuthorizationRules" `
+        -Location $Location
 
     $json = '
     {

@@ -1,23 +1,7 @@
-# Set up your common properties here.
-# A centralized place to get one of these objects empty
-function Get-SpqCommonProperties {
-    #################################
-    # customize this to your liking #
-    #################################
-
-    $commonPropertiesString = 
-    '
-    {
-        "EnvironmentName": "",
-        "ApplicationCode": ""
-    }
-    '
-    return $commonPropertiesString | ConvertFrom-Json
-}
-
 function Get-SpqResourceName {
     Param(
-        [parameter(Mandatory = $true)] [object] $CommonProperties,
+        [parameter(Mandatory = $true)] [string] $ApplicationCode,
+        [parameter(Mandatory = $true)] [string] $EnvironmentName,
         [parameter(Mandatory = $false)] $UniqueNamePhrase = $null,
         [parameter(Mandatory = $true)] [string] $ServiceTypeName,
         [parameter(Mandatory = $true)] [string] $Location
@@ -58,12 +42,12 @@ function Get-SpqResourceName {
 
     # Application Code
     $resourceName = `
-        $CommonProperties.ApplicationCode
+        $ApplicationCode
 
     # Environment Name
     $resourceName = $resourceName + `
         $separationCharacter + `
-        $CommonProperties.EnvironmentName 
+        $EnvironmentName 
 
     # Resource Type Abbreviation
     $resourceName = $resourceName + `

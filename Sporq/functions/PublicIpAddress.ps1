@@ -1,13 +1,15 @@
 function Get-SpqPublicIpAddress {
     Param(
-        [parameter(Mandatory = $true)] [object] $CommonProperties,
+        [parameter(Mandatory = $true)] [string] $ApplicationCode,
+        [parameter(Mandatory = $true)] [string] $EnvironmentName,
         [parameter(Mandatory = $true)] [string] $Location,
         [parameter(Mandatory = $false)] [string] $UniqueNamePhrase = $null,
         [string] $ExceptionGuid
     )
     
     $pipName = Get-SpqResourceName `
-        -CommonProperties $CommonProperties `
+        -ApplicationCode $ApplicationCode `
+        -EnvironmentName $EnvironmentName `
         -UniqueNamePhrase $UniqueNamePhrase `
         -ServiceTypeName "Microsoft.Network/publicIPAddresses" `
         -Location $Location

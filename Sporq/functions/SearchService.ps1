@@ -9,7 +9,8 @@ function Get-SpqReferenceToSearchAdminKey {
 
 function Get-SpqSearch {
     Param(
-        [parameter(Mandatory = $true)] [object] $CommonProperties,
+        [parameter(Mandatory = $true)] [string] $ApplicationCode,
+        [parameter(Mandatory = $true)] [string] $EnvironmentName,
         [parameter(Mandatory = $true)] [string] $Location,
         [parameter(Mandatory = $false)] [string] $UniqueNamePhrase = $null,
         [string] $ExceptionGuid,
@@ -19,7 +20,8 @@ function Get-SpqSearch {
     )
     
     $searchName = Get-SpqResourceName `
-        -CommonProperties $CommonProperties `
+        -ApplicationCode $ApplicationCode `
+        -EnvironmentName $EnvironmentName `
         -UniqueNamePhrase $UniqueNamePhrase `
         -ServiceTypeName "Microsoft.Search/searchServices" `
         -Location $Location
