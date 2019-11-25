@@ -48,7 +48,7 @@ foreach ($resource in $resourcesToTest) {
                 
                 # if we encounter an exception for this test in the ARM template, mark the test as Skipped
                 if ($exceptionArray.Contains("c060eaba-feef-411c-b527-637f246fd781")) {
-                    Set-ItResult -Skipped -Because "Exception Encountered"
+                    Set-ItResult -Skipped -Because "Exception Requested"
                 }
 
                 $resource.properties.encryption.services.blob.enabled | Should Be $true
@@ -63,7 +63,7 @@ foreach ($resource in $resourcesToTest) {
                 
                 # if we encounter an exception for this test in the ARM template, mark the test as Skipped
                 if ($exceptionArray.Contains("55f0b481-bea5-4b4f-9c93-d33b3d7cc981")) {
-                    Set-ItResult -Skipped -Because "Exception Encountered"
+                    Set-ItResult -Skipped -Because "Exception Requested"
                 }
 
                 $resource.properties.supportsHttpsTrafficOnly | Should Be $true
@@ -74,7 +74,7 @@ foreach ($resource in $resourcesToTest) {
 
                 # if we encounter an exception for this test in the ARM template, mark the test as Skipped
                 if ($exceptionArray.Contains("f354adb1-429c-4c83-b6bd-de6012358b33")) {
-                    Set-ItResult -Skipped -Because "Exception Encountered"
+                    Set-ItResult -Skipped -Because "Exception Requested"
                 }
                 
                 $resource.sku.name | Should Be "Standard_RAGRS"

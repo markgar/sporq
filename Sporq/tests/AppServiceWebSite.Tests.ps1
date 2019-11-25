@@ -41,7 +41,7 @@ foreach ($resource in $resourcesToTest) {
                 # if we encounter an exception for this test in the ARM template, mark the test as Skipped
                 if ($exceptionArray.Contains("3381100b-f753-4653-aea2-8fd117acfa57")) {
                     # if a fully featured exception mechanism was set up, you could look it up and pull an actual reason and put it here
-                    Set-ItResult -Skipped -Because "Exception Encountered"
+                    Set-ItResult -Skipped -Because "Exception Requested"
                 }
 
                 $resource.properties.httpsOnly | Should Be $true
