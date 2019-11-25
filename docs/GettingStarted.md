@@ -18,7 +18,7 @@ Add this code to the file:
 $baseTemplate = Get-SpqBaseTemplate
 
 # Create a storage account fragment
-$myStorageAccount = Get-SpqStorageAccount -Location "centralus" -StorageAccessTier "Standard_RAGRS" -StorageTier "Standard"
+$myStorageAccount = Get-SpqStorageAccount -ApplicationCode "hq7" -EnvironmentName "dev" -Location "centralus" -StorageAccessTier "Standard_RAGRS"
 
 # Add it to the template
 $baseTemplate.resources += $myStorageAccount
