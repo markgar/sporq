@@ -43,3 +43,6 @@ Because of the way Sporq convention works, it is easy to use this on your local 
 - **Sporq** is part of a larger governance strategey.  If you'd like to know more, check out [Governance Strategy](doc/GovernanceStrategy.md).  
 - If you'd like to contribute, check out [Contributions](doc/Contributions.md).  
 - If you're interested in customizing Sporq to suit your enterprise needs, this is straight forward.  You can can create your own private nuget package with templates customized by you with tests customized by you.  You can check out more on how to do this at [Customizing Sporq for Your Enterprise](doc/CustomizeSporq.md). 
+
+# What's Next?
+The next step is to [get started](GettingStarted.md).
