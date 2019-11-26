@@ -1,5 +1,5 @@
 # Introduction 
-**Sporq** is a governance framework that includes things like a programmatic way to [create arm templates](doc/GettingStarted.md), a [naming convention](doc/NamingConvention.md), [secret management and rotation](doc/RefreshingKeys.md) right from the start, [cost management](doc/ResourceGroups.md) by default, and a framework to [security-test arm templates](doc/Testing.md) before they are deployed.
+**Sporq** is a governance framework that includes things like a programmatic way to [create arm templates](GettingStarted.md), a [naming convention](NamingConvention.md), [secret management and rotation](RefreshingKeys.md) right from the start, [cost management](ResourceGroups.md) by default, and a framework to [security-test arm templates](Testing.md) before they are deployed.
 
 **Sporq** is for you if:
 - You want to get going fast and don't mind using a governance strategy that is _pre-built_ (it is ready go right now - no changes needed), _opinionated_ (there is a certian way of doing things), and _prescriptive_ (focused on getting things done rather than discussing options)

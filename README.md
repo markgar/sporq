@@ -37,8 +37,8 @@ You can learn how to use Sporq to write your own ARM templates by reading our do
 - [Refreshing Keys](docs/RefreshingKeys.md)
 - [Testing Your Templates](docs/Testing.md)
 - [Managing Resource Group Creation](docs/ResourceGroups.md)
-- [Naming Convention](NamingConvention.md)
-- [Customizing Sporq for your enterprise](CustomizeSporq.md)
+- [Naming Convention](docs/NamingConvention.md)
+- [Customizing Sporq for your enterprise](docs/CustomizeSporq.md)
 - [Cmdlet Documentation]()
 
 Or by watching:
