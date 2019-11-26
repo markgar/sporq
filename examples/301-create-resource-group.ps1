@@ -1,6 +1,9 @@
+$environmentName = "dev"
+$applicationCode = "q4k"
+
 $tags = @{ 
-    "env"     = $commonProperties.EnvironmentName; 
-    "appcode" = $commonProperties.ApplicationCode
+    "env"     = $environmentName; 
+    "appcode" = $applicationCode
 }
 
 New-SpqResourceGroup -ApplicationCode "id8" -EnvironmentName "dev" `

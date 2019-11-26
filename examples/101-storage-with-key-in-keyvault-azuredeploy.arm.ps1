@@ -1,7 +1,5 @@
 Write-Host "Generating Template..."
 
-# Declare your common properties
-$commonProperties = Get-SpqCommonProperties
 $environmentName = "dev"
 $applicationCode = "q4k"
 
