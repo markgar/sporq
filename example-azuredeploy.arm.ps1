@@ -14,7 +14,7 @@ function Get-Template {
     Write-Host "Generating Template..."
 
     $environmentName = "dev"
-    $applicationCode = "h9x"
+    $applicationCode = "kfj"
 
     # Grab an empty base template
     $baseTemplate = Get-SpqBaseTemplate
@@ -22,7 +22,9 @@ function Get-Template {
     # Declare some infrastructure
 
     #region Key Vault
-    $keyVault = Get-SpqKeyVault -ApplicationCode $applicationCode -EnvironmentName $environmentName -Location "centralus" 
+    $keyVault = Get-SpqKeyVault -ApplicationCode $applicationCode -EnvironmentName $environmentName -Location "centralus" `
+        -LogAnalyticsResourceGroupName "DefaultResourceGroup-EUS" `
+        -LogAnalyticsWorkspaceName "DefaultWorkspace-75ebdae9-6e1c-4baa-8b2e-5576f6356a91-EUS"
     $baseTemplate.resources += $keyVault
     #endregion
 
@@ -35,30 +37,31 @@ function Get-Template {
         -StorageAccessTier "Standard_LRS" 
     $baseTemplate.resources += $myStorageAccount
     
-    $storageKeyVaultSecret = Get-SpqKeyVaultSecret `
-        -ApplicationCode $applicationCode `
-        -EnvironmentName $environmentName `
-        -Location "centralus" `
-        -KeyVault $keyVault `
-        -KeyOwningObject $myStorageAccount
-    $baseTemplate.resources += $storageKeyVaultSecret
+    # $storageKeyVaultSecret = Get-SpqKeyVaultSecret `
+    #     -ApplicationCode $applicationCode `
+    #     -EnvironmentName $environmentName `
+    #     -Location "centralus" `
+    #     -KeyVault $keyVault `
+    #     -KeyOwningObject $myStorageAccount
+    # $baseTemplate.resources += $storageKeyVaultSecret
     #endregion
 
     # region Cosmos DB
     $myCosmosDB = Get-SpqCosmosDbAccount `
         -ApplicationCode $applicationCode `
         -EnvironmentName $environmentName `
-        -Location "centralus"
+        -Location "centralus" `
+        -LogAnalyticsResourceGroupName "DefaultResourceGroup-EUS" `
+        -LogAnalyticsWorkspaceName "DefaultWorkspace-75ebdae9-6e1c-4baa-8b2e-5576f6356a91-EUS"
     $baseTemplate.resources += $myCosmosDB
 
-    $cosmosKeyVaultSecret = Get-SpqKeyVaultSecret `
-        -ApplicationCode $applicationCode `
-        -EnvironmentName $environmentName `
-        -Location "centralus" `
-        -KeyVault $keyVault `
-        -KeyOwningObject $myCosmosDB
-
-    $baseTemplate.resources += $cosmosKeyVaultSecret
+    # $cosmosKeyVaultSecret = Get-SpqKeyVaultSecret `
+    #     -ApplicationCode $applicationCode `
+    #     -EnvironmentName $environmentName `
+    #     -Location "centralus" `
+    #     -KeyVault $keyVault `
+    #     -KeyOwningObject $myCosmosDB
+    # $baseTemplate.resources += $cosmosKeyVaultSecret
     # endregion
 
     # region App Services
@@ -93,6 +96,12 @@ function Get-Template {
         -EnvironmentName $environmentName `
         -Location "centralus"
     $baseTemplate.resources += $appInsights
+
+    $logAnalytics = Get-SpqLogAnalytics `
+        -ApplicationCode $applicationCode `
+        -EnvironmentName $environmentName `
+        -Location "centralus"
+    $baseTemplate.resources += $logAnalytics
     # endregion
     
     # region Search
@@ -102,39 +111,43 @@ function Get-Template {
         -Location "centralus" `
         -ReplicaCount 1 `
         -PartitionCount 1 `
-        -Sku "standard"
+        -Sku "standard" `
+        -LogAnalyticsResourceGroupName "DefaultResourceGroup-EUS" `
+        -LogAnalyticsWorkspaceName "DefaultWorkspace-75ebdae9-6e1c-4baa-8b2e-5576f6356a91-EUS"
     $baseTemplate.resources += $mySearchService
 
-    $searchKeyVaultSecret = Get-SpqKeyVaultSecret `
-        -ApplicationCode $applicationCode `
-        -EnvironmentName $environmentName `
-        -Location "centralus" `
-        -KeyVault $keyVault `
-        -KeyOwningObject $mySearchService
-    $baseTemplate.resources += $searchKeyVaultSecret
+    # $searchKeyVaultSecret = Get-SpqKeyVaultSecret `
+    #     -ApplicationCode $applicationCode `
+    #     -EnvironmentName $environmentName `
+    #     -Location "centralus" `
+    #     -KeyVault $keyVault `
+    #     -KeyOwningObject $mySearchService
+    # $baseTemplate.resources += $searchKeyVaultSecret
     # endregion
 
     # region Event Hub
     $eventHubNamespace = Get-SpqEventHubNamespace `
         -ApplicationCode $applicationCode `
         -EnvironmentName $environmentName `
-        -Location "centralus"
+        -Location "centralus" `
+        -LogAnalyticsResourceGroupName "DefaultResourceGroup-EUS" `
+        -LogAnalyticsWorkspaceName "DefaultWorkspace-75ebdae9-6e1c-4baa-8b2e-5576f6356a91-EUS"
     $baseTemplate.resources += $eventHubNamespace
 
-    $eventHubNamespaceAuthorizationRule = Get-SpqEventHubNamespaceAuthorizationRule `
-        -ApplicationCode $applicationCode `
-        -EnvironmentName $environmentName `
-        -Location "centralus" `
-        -EventHubNamespace $eventHubNamespace
-    $baseTemplate.resources += $eventHubNamespaceAuthorizationRule
+    # $eventHubNamespaceAuthorizationRule = Get-SpqEventHubNamespaceAuthorizationRule `
+    #     -ApplicationCode $applicationCode `
+    #     -EnvironmentName $environmentName `
+    #     -Location "centralus" `
+    #     -EventHubNamespace $eventHubNamespace
+    # $baseTemplate.resources += $eventHubNamespaceAuthorizationRule
 
-    $namespaceKeyVaultSecret = Get-SpqKeyVaultSecret `
-        -ApplicationCode $applicationCode `
-        -EnvironmentName $environmentName `
-        -Location "centralus" `
-        -KeyVault $keyVault `
-        -KeyOwningObject $eventHubNamespaceAuthorizationRule
-    $baseTemplate.resources += $namespaceKeyVaultSecret
+    # $namespaceKeyVaultSecret = Get-SpqKeyVaultSecret `
+    #     -ApplicationCode $applicationCode `
+    #     -EnvironmentName $environmentName `
+    #     -Location "centralus" `
+    #     -KeyVault $keyVault `
+    #     -KeyOwningObject $eventHubNamespaceAuthorizationRule
+    # $baseTemplate.resources += $namespaceKeyVaultSecret
 
     $eventHub = Get-SpqEventHub `
         -ApplicationCode $applicationCode `
@@ -144,10 +157,29 @@ function Get-Template {
     $baseTemplate.resources += $eventHub
     # endregion
 
+    $redis = Get-SpqRedis `
+        -ApplicationCode $applicationCode `
+        -EnvironmentName $environmentName `
+        -Location "centralus" `
+        -SkuName "Standard" `
+        -SkuFamily "C" `
+        -SkuCapacity 1 `
+        -LogAnalyticsResourceGroupName "DefaultResourceGroup-EUS" `
+        -LogAnalyticsWorkspaceName "DefaultWorkspace-75ebdae9-6e1c-4baa-8b2e-5576f6356a91-EUS"
+    $baseTemplate.resources += $redis
+
+    $appConfig = Get-SpqAppConfiguration `
+        -ApplicationCode $applicationCode `
+        -EnvironmentName $environmentName `
+        -Location "centralus" 
+    $baseTemplate.resources += $appConfig
+
     $publicIp = Get-SpqPublicIpAddress `
         -ApplicationCode $applicationCode `
         -EnvironmentName $environmentName `
-        -Location "centralus"
+        -Location "westus" `
+        -LogAnalyticsResourceGroupName "DefaultResourceGroup-EUS" `
+        -LogAnalyticsWorkspaceName "DefaultWorkspace-75ebdae9-6e1c-4baa-8b2e-5576f6356a91-EUS"
     $baseTemplate.resources += $publicIp
 
     $networkInterface = Get-SpqNetworkInterface `

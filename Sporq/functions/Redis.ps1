@@ -1,59 +1,55 @@
-function Get-SpqKeyVault {
+function Get-SpqRedis {
     Param(
         [parameter(Mandatory = $true)] [string] $ApplicationCode,
         [parameter(Mandatory = $true)] [string] $EnvironmentName,
         [parameter(Mandatory = $true)] [string] $Location,
         [parameter(Mandatory = $false)] [string] $UniqueNamePhrase = $null,
-        [parameter(Mandatory = $false)] [string] $ExceptionGuid,
+        [string] $ExceptionGuid,
+        [parameter(Mandatory = $true)] [string] $SkuName,
+        [parameter(Mandatory = $true)] [string] $SkuFamily,
+        [parameter(Mandatory = $true)] [int] $SkuCapacity,
         [parameter(Mandatory = $true)] [string] $LogAnalyticsResourceGroupName,
         [parameter(Mandatory = $true)] [string] $LogAnalyticsWorkspaceName
     )
-
-    $keyVaultName = Get-SpqResourceName `
+    
+    $redisName = Get-SpqResourceName `
         -ApplicationCode $ApplicationCode `
         -EnvironmentName $EnvironmentName `
         -UniqueNamePhrase $UniqueNamePhrase `
-        -ServiceTypeName "Microsoft.KeyVault/vaults" `
+        -ServiceTypeName "Microsoft.Cache/Redis" `
         -Location $Location
-        
-    $keyVaultDiagnosticsSettingName = $keyVaultName + "-diagsett"
+
+    $redisDiagnosticsSettingName = $redisName + "-diagsett"
 
     $json = '
     {
-        "type": "Microsoft.KeyVault/vaults",
-        "name": "' + $keyVaultName + '",
-        "apiVersion": "2015-06-01",
-        "location": "' + $Location + '",
+        "name": "' + $redisName + '",
+        "type": "Microsoft.Cache/Redis",
+        "apiVersion": "2018-03-01",
         "properties": {
             "sku": {
-                "family": "A",
-                "name": "Standard"
-            },
-            "tenantId": "[subscription().tenantId]",
-            "enabledForTemplateDeployment": "true",
-            "accessPolicies": []
+                "name": "' + $SkuName + '",
+                "family": "' + $SkuFamily + '",
+                "capacity": "' + $SkuCapacity + '"
+            }
         },
-        "resources": [            
+        "location": "' + $Location + '",
+        "tags": {},
+        "resources": [
             {
                 "type": "providers/diagnosticSettings",
-                "name": "Microsoft.Insights/' + $keyVaultDiagnosticsSettingName + '",
+                "name": "Microsoft.Insights/' + $redisDiagnosticsSettingName + '",
                 "dependsOn": [
-                    "[resourceId(''Microsoft.KeyVault/vaults'', ''' + $keyVaultName + ''')]"
+                    "[resourceId(''Microsoft.Cache/Redis'', ''' + $redisName + ''')]"
                 ],
                 "apiVersion": "2017-05-01-preview",
                 "properties": {
-                    "name": "' + $keyVaultDiagnosticsSettingName + '",
+                    "name": "' + $redisDiagnosticsSettingName + '",
                     "workspaceId": "[resourceId(''' + $LogAnalyticsResourceGroupName + ''', ''microsoft.operationalinsights/workspaces'', ''' + $LogAnalyticsWorkspaceName + ''')]",
                     "metrics": [
                         {
                             "category": "AllMetrics",
                             "enabled": true
-                        }
-                    ],      
-                    "logs": [ 
-                        {
-                          "category": "AuditEvent",
-                          "enabled": true
                         }
                     ]
                 }
@@ -63,9 +59,6 @@ function Get-SpqKeyVault {
     '
     return ConvertFrom-Json $json
 }
-
-
-
 
 
 

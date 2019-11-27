@@ -16,7 +16,9 @@ function Get-SpqSearch {
         [string] $ExceptionGuid,
         [parameter(Mandatory = $true)] [string] $Sku,
         [parameter(Mandatory = $true)] [string] $ReplicaCount,
-        [parameter(Mandatory = $true)] [string] $PartitionCount
+        [parameter(Mandatory = $true)] [string] $PartitionCount,
+        [parameter(Mandatory = $true)] [string] $LogAnalyticsResourceGroupName,
+        [parameter(Mandatory = $true)] [string] $LogAnalyticsWorkspaceName
     )
     
     $searchName = Get-SpqResourceName `
@@ -26,6 +28,7 @@ function Get-SpqSearch {
         -ServiceTypeName "Microsoft.Search/searchServices" `
         -Location $Location
 
+    $searchDiagnosticsSettingName = $searchName + "-diagsett"
 
     $json = '
     {
@@ -40,7 +43,33 @@ function Get-SpqSearch {
             "replicaCount": ' + $ReplicaCount + ',
             "partitionCount": ' + $PartitionCount + ',
             "hostingMode": "Default"
-        }
+        },
+        "resources": [            
+            {
+                "type": "providers/diagnosticSettings",
+                "name": "Microsoft.Insights/' + $searchDiagnosticsSettingName + '",
+                "dependsOn": [
+                    "[resourceId(''Microsoft.Search/searchServices'', ''' + $searchName + ''')]"
+                ],
+                "apiVersion": "2017-05-01-preview",
+                "properties": {
+                    "name": "' + $searchDiagnosticsSettingName + '",
+                    "workspaceId": "[resourceId(''' + $LogAnalyticsResourceGroupName + ''', ''microsoft.operationalinsights/workspaces'', ''' + $LogAnalyticsWorkspaceName + ''')]",
+                    "metrics": [
+                        {
+                            "category": "AllMetrics",
+                            "enabled": true
+                        }
+                    ],      
+                    "logs": [ 
+                        {
+                          "category": "OperationLogs",
+                          "enabled": true
+                        }
+                    ]
+                }
+            }
+        ]
     }
     '
     return ConvertFrom-Json $json

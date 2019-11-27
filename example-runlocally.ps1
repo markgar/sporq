@@ -11,4 +11,4 @@ $templatePath = "./out/azuredeploy.json"
 # "out" directory is excluded in .gitignore
 Get-Template -TemplateOutputPath $templatePath -EnvironmentName "dev"
 
-Test-Template -TemplatePath $templatePath
+# Test-Template -TemplatePath $templatePath

@@ -68,6 +68,7 @@
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
     NestedModules     = @(
         './functions/Common.ps1',
+        './functions/AppConfig.ps1',
         './functions/BaseTemplate.ps1',
         './functions/AppInsights.ps1'
         './functions/AppServiceFunctionApp.ps1',
@@ -79,8 +80,10 @@
         './functions/EventHubNamespace.ps1',
         './functions/KeyVault.ps1',
         './functions/KeyVaultSecret.ps1',
+        './functions/LogAnalytics.ps1',
         './functions/NetworkInterface.ps1',
         './functions/PublicIpAddress.ps1',
+        './functions/Redis.ps1',        
         './functions/SearchService.ps1',
         './functions/StorageAccount.ps1',
         './functions/VirtualMachine.ps1',

@@ -13,7 +13,10 @@ function Get-SpqEventHubNamespace {
         [parameter(Mandatory = $true)] [string] $EnvironmentName,
         [parameter(Mandatory = $true)] [string] $Location,
         [parameter(Mandatory = $false)] [string] $UniqueNamePhrase = $null,
-        [string] $ExceptionGuid
+        [string] $ExceptionGuid,
+        [parameter(Mandatory = $true)] [string] $LogAnalyticsResourceGroupName,
+        [parameter(Mandatory = $true)] [string] $LogAnalyticsWorkspaceName
+
     )
     
     $eventHubNamespaceName = Get-SpqResourceName `
@@ -22,6 +25,8 @@ function Get-SpqEventHubNamespace {
         -UniqueNamePhrase $UniqueNamePhrase `
         -ServiceTypeName "Microsoft.EventHub/namespaces" `
         -Location $Location
+
+    $eventHubNamespaceDiagnosticsSettingName = $eventHubNamespaceName + "-diagsett"
 
     $json = '
     {
@@ -37,7 +42,33 @@ function Get-SpqEventHubNamespace {
         "properties": {
             "isAutoInflateEnabled": false,
             "maximumThroughputUnits": 0
-        }
+        },
+        "resources": [            
+            {
+                "type": "providers/diagnosticSettings",
+                "name": "Microsoft.Insights/' + $eventHubNamespaceDiagnosticsSettingName + '",
+                "dependsOn": [
+                    "[resourceId(''Microsoft.EventHub/namespaces'', ''' + $eventHubNamespaceName + ''')]"
+                ],
+                "apiVersion": "2017-05-01-preview",
+                "properties": {
+                    "name": "' + $eventHubNamespaceDiagnosticsSettingName + '",
+                    "workspaceId": "[resourceId(''' + $LogAnalyticsResourceGroupName + ''', ''microsoft.operationalinsights/workspaces'', ''' + $LogAnalyticsWorkspaceName + ''')]",
+                    "metrics": [
+                        {
+                            "category": "AllMetrics",
+                            "enabled": true
+                        }
+                    ],      
+                    "logs": [ 
+                        {
+                          "category": "OperationalLogs",
+                          "enabled": true
+                        }
+                    ]
+                }
+            }
+        ]
     }
     '
     return ConvertFrom-Json $json

@@ -99,6 +99,9 @@ function Get-SpqResourceTypeAbbreviation {
         "Microsoft.Compute/virtualMachines" { $abbreviation = "vm"; break }
         "Microsoft.Network/networkInterfaces" { $abbreviation = "nic"; break }
         "Microsoft.Network/publicIPAddresses" { $abbreviation = "pip"; break }
+        "Microsoft.AppConfiguration/configurationStores" { $abbreviation = "appcfg"; break }
+        "Microsoft.Cache/Redis" { $abbreviation = "redis"; break }
+        "microsoft.operationalinsights/workspaces" { $abbreviation = "loganltcs"; break }
     }
 
     return $abbreviation

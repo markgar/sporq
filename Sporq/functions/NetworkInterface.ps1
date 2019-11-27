@@ -22,12 +22,19 @@ function Get-SpqNetworkInterface {
     if ($PublicIP) {
         $publicIpFragment = '
         "publicIPAddress": {
-            "id": "[resourceId(''Microsoft.Network/networkInterfaces/'', ''' + $PublicIP.name + ''')]"
+            "id": "[resourceId(''Microsoft.Network/publicIPAddresses'', ''' + $PublicIP.name + ''')]"
         },
+        '
+
+        $dependsOnFragment = '
+        "dependsOn": [
+            "[resourceId(''Microsoft.Network/publicIPAddresses'', ''' + $PublicIP.name + ''')]"
+        ],
         '
     }
     else {
         $publicIpFragment = ''
+        $dependsOnFragment = ''
     }
 
     $json = '
@@ -35,15 +42,16 @@ function Get-SpqNetworkInterface {
         "type": "Microsoft.Network/networkInterfaces",
         "apiVersion": "2019-09-01",
         "name": "' + $nicName + '",
-        "location": "' + $Location + '",
-        "properties": {
-            "ipConfigurations": [
+        "location": "' + $Location + '", ' `
+        + $dependsOnFragment + `
+        '"properties": {
+                "ipConfigurations": [
                 {
                     "name": "ipconfig1",
                     "properties": {
                         "privateIPAllocationMethod": "Dynamic",' `
-        + $publicIpFragment + `
-        '"subnet": {
+                        + $publicIpFragment + `
+                        '"subnet": {
                             "id": "[resourceId(''' + $VNetResourceGroupName + ''', ''Microsoft.Network/virtualNetworks/subnets'', ''' + $VNetName + ''', ''' + $SubnetName + ''')]"
                         }
                     }
