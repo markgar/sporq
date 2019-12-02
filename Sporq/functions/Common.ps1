@@ -4,7 +4,7 @@ function Get-SpqResourceName {
         [parameter(Mandatory = $true)] [string] $EnvironmentName,
         [parameter(Mandatory = $false)] $UniqueNamePhrase = $null,
         [parameter(Mandatory = $true)] [string] $ServiceTypeName,
-        [parameter(Mandatory = $true)] [string] $Location
+        [parameter(Mandatory = $false)] [string] $Location = $null
     )
 
     if ($ServiceTypeName -eq "Microsoft.Storage/storageAccounts") {
@@ -15,7 +15,7 @@ function Get-SpqResourceName {
     }
 
     $resourceTypeAbbreviation = Get-SpqResourceTypeAbbreviation -ServiceTypeName $ServiceTypeName
-    $locationAbbreviation = Get-SpqLocationAbbreviation -Location $Location
+    
 
     #################################
     # customize this to your liking #
@@ -64,8 +64,8 @@ function Get-SpqResourceName {
     }
     
     # Location
-    if ($ServiceTypeName -ne "ResourceGroup") {
-        # don't put a service name if this is a ResourceGroup
+    if (($ServiceTypeName -ne "ResourceGroup") -and ($ServiceTypeName -ne "Microsoft.Network/frontDoors")) {
+        $locationAbbreviation = Get-SpqLocationAbbreviation -Location $Location
         $resourceName = $resourceName + `
             $separationCharacter + `
             $locationAbbreviation        
@@ -102,6 +102,7 @@ function Get-SpqResourceTypeAbbreviation {
         "Microsoft.AppConfiguration/configurationStores" { $abbreviation = "appcfg"; break }
         "Microsoft.Cache/Redis" { $abbreviation = "redis"; break }
         "microsoft.operationalinsights/workspaces" { $abbreviation = "loganltcs"; break }
+        "Microsoft.Network/frontDoors" { $abbreviation = "frtdr"; break }
     }
 
     return $abbreviation

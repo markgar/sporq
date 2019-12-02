@@ -78,6 +78,7 @@
         './functions/CosmosDBAccount.ps1',
         './functions/EventHub.ps1',
         './functions/EventHubNamespace.ps1',
+        './functions/FrontDoor.ps1',
         './functions/KeyVault.ps1',
         './functions/KeyVaultSecret.ps1',
         './functions/LogAnalytics.ps1',
