@@ -12,7 +12,7 @@
     #RootModule        = 'Sporq.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '0.10.0'
+    ModuleVersion     = '0.11.0'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -75,6 +75,7 @@
         './functions/AppServicePlan.ps1',
         './functions/AppServicePlanConsumption.ps1',
         './functions/AppServiceWebSite.ps1',
+        './functions/CognitiveServices.ps1',
         './functions/CosmosDBAccount.ps1',
         './functions/EventHub.ps1',
         './functions/EventHubNamespace.ps1',

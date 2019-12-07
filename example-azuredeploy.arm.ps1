@@ -208,6 +208,9 @@ function Get-Template {
     # $functionApp = Get-SpqAppServiceFunctionApp -ApplicationCode $applicationCode -EnvironmentName $environmentName -Location "centralus" -AppServicePlan $consumptionASP -StorageAccount $myStorageAccount
     # $baseTemplate.resources += $functionApp
 
+    $cognitiveServiceAcct = Get-SpqCognitiveService -ApplicationCode $applicationCode -EnvironmentName $environmentName -Location "centralus"
+    $baseTemplate.resources += $cognitiveServiceAcct
+    
     $frontDoor = Get-SpqFrontDoor `
         -ApplicationCode $applicationCode `
         -EnvironmentName $environmentName `

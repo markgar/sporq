@@ -3,12 +3,12 @@ Remove-Module -Name Sporq
 Import-Module -Name './Sporq/Sporq.psd1' -Force
 
 Get-SpqPesterTests -OutputPath './out/'
-. ./examples/102-website-appservicesplan-frontdoor-azuredeploy.arm.ps1
+. ./example-azuredeploy.arm.ps1
 
 $templatePath = "./out/azuredeploy.json"
 
 # output to "out" directory to keep things clean
 # "out" directory is excluded in .gitignore
-# Get-Template -TemplateOutputPath $templatePath -EnvironmentName "dev"
+Get-Template -TemplateOutputPath $templatePath -EnvironmentName "dev"
 
 # Test-Template -TemplatePath $templatePath
