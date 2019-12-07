@@ -103,6 +103,8 @@ function Get-SpqResourceTypeAbbreviation {
         "Microsoft.Cache/Redis" { $abbreviation = "redis"; break }
         "microsoft.operationalinsights/workspaces" { $abbreviation = "loganltcs"; break }
         "Microsoft.Network/frontDoors" { $abbreviation = "frtdr"; break }
+        "Microsoft.CognitiveServices/accounts" { $abbreviation = "cogsvc"; break }
+        
     }
 
     return $abbreviation
