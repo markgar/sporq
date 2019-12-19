@@ -2,6 +2,8 @@
 
 Sporq: the multi-tool for resource governance in Azure.  Use Powershell to emit ARM templates to enable a new level of reusability, composability, and testability.
 
+https://github.com/markgar/sporq/workflows/Create%20Module,%20Push%20to%20Powershell%20Gallery/badge.svg
+
 Sporq three main facets:
 - An object based ARM Template generator
 - PowerShell implementation of automated Azure Resource Key Refreshment
