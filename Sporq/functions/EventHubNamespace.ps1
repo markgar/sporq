@@ -14,8 +14,8 @@ function Get-SpqEventHubNamespace {
         [parameter(Mandatory = $true)] [string] $Location,
         [parameter(Mandatory = $false)] [string] $UniqueNamePhrase = $null,
         [string] $ExceptionGuid,
-        [parameter(Mandatory = $true)] [string] $LogAnalyticsResourceGroupName,
-        [parameter(Mandatory = $true)] [string] $LogAnalyticsWorkspaceName
+        [parameter(Mandatory = $false)] [string] $LogAnalyticsResourceGroupName = "",
+        [parameter(Mandatory = $false)] [string] $LogAnalyticsWorkspaceName = ""
 
     )
     
@@ -27,6 +27,35 @@ function Get-SpqEventHubNamespace {
         -Location $Location
 
     $eventHubNamespaceDiagnosticsSettingName = $eventHubNamespaceName + "-diagsett"
+
+    $diagnosticSettingJson = '
+    {
+        "type": "providers/diagnosticSettings",
+        "name": "Microsoft.Insights/' + $eventHubNamespaceDiagnosticsSettingName + '",
+        "dependsOn": [
+            "[resourceId(''Microsoft.EventHub/namespaces'', ''' + $eventHubNamespaceName + ''')]"
+        ],
+        "apiVersion": "2017-05-01-preview",
+        "properties": {
+            "name": "' + $eventHubNamespaceDiagnosticsSettingName + '",
+            "workspaceId": "[resourceId(''' + $LogAnalyticsResourceGroupName + ''', ''microsoft.operationalinsights/workspaces'', ''' + $LogAnalyticsWorkspaceName + ''')]",
+            "metrics": [
+                {
+                    "category": "AllMetrics",
+                    "enabled": true
+                }
+            ],      
+            "logs": [ 
+                {
+                  "category": "OperationalLogs",
+                  "enabled": true
+                }
+            ]
+        }
+    }
+    '
+
+    $diagnosticSettingObj = ConvertFrom-Json $diagnosticSettingJson
 
     $json = '
     {
@@ -44,34 +73,18 @@ function Get-SpqEventHubNamespace {
             "maximumThroughputUnits": 0
         },
         "resources": [            
-            {
-                "type": "providers/diagnosticSettings",
-                "name": "Microsoft.Insights/' + $eventHubNamespaceDiagnosticsSettingName + '",
-                "dependsOn": [
-                    "[resourceId(''Microsoft.EventHub/namespaces'', ''' + $eventHubNamespaceName + ''')]"
-                ],
-                "apiVersion": "2017-05-01-preview",
-                "properties": {
-                    "name": "' + $eventHubNamespaceDiagnosticsSettingName + '",
-                    "workspaceId": "[resourceId(''' + $LogAnalyticsResourceGroupName + ''', ''microsoft.operationalinsights/workspaces'', ''' + $LogAnalyticsWorkspaceName + ''')]",
-                    "metrics": [
-                        {
-                            "category": "AllMetrics",
-                            "enabled": true
-                        }
-                    ],      
-                    "logs": [ 
-                        {
-                          "category": "OperationalLogs",
-                          "enabled": true
-                        }
-                    ]
-                }
-            }
         ]
     }
     '
-    return ConvertFrom-Json $json
+
+    $obj = ConvertFrom-Json $json
+
+    if ($LogAnalyticsResourceGroupName -ne "")
+    {
+        $obj.resources += $diagnosticSettingObj
+    }
+
+    return $obj
 }
 
 

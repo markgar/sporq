@@ -14,8 +14,8 @@ function Get-SpqCosmosDbAccount {
         [parameter(Mandatory = $true)] [string] $Location,
         [parameter(Mandatory = $false)] [string] $UniqueNamePhrase = $null,
         [string] $ExceptionGuid,
-        [parameter(Mandatory = $true)] [string] $LogAnalyticsResourceGroupName,
-        [parameter(Mandatory = $true)] [string] $LogAnalyticsWorkspaceName
+        [parameter(Mandatory = $false)] [string] $LogAnalyticsResourceGroupName = "",
+        [parameter(Mandatory = $false)] [string] $LogAnalyticsWorkspaceName = ""
     )
     
     $cosmosName = Get-SpqResourceName `
@@ -26,6 +26,39 @@ function Get-SpqCosmosDbAccount {
         -Location $Location
 
     $cosmosDiagnosticsSettingName = $cosmosName + "-diagsett"
+
+    $diagnosticSettingJson = '
+    {
+        "type": "providers/diagnosticSettings",
+        "name": "Microsoft.Insights/' + $cosmosDiagnosticsSettingName + '",
+        "dependsOn": [
+            "[resourceId(''Microsoft.DocumentDB/databaseAccounts'', ''' + $cosmosName + ''')]"
+        ],
+        "apiVersion": "2017-05-01-preview",
+        "properties": {
+            "name": "' + $cosmosDiagnosticsSettingName + '",
+            "workspaceId": "[resourceId(''' + $LogAnalyticsResourceGroupName + ''', ''microsoft.operationalinsights/workspaces'', ''' + $LogAnalyticsWorkspaceName + ''')]",
+            "metrics": [
+                {
+                    "category": "Requests",
+                    "enabled": true
+                }
+            ],      
+            "logs": [ 
+                {
+                  "category": "ControlPlaneRequests",
+                  "enabled": true
+                },
+                {
+                    "category": "DataPlaneRequests",
+                    "enabled": true
+                }
+            ]
+        }
+    }
+    '
+
+    $diagnosticSettingObj = ConvertFrom-Json $diagnosticSettingJson
 
     $json = '
     {
@@ -58,37 +91,17 @@ function Get-SpqCosmosDbAccount {
             "capabilities": []
         },
         "resources": [            
-            {
-                "type": "providers/diagnosticSettings",
-                "name": "Microsoft.Insights/' + $cosmosDiagnosticsSettingName + '",
-                "dependsOn": [
-                    "[resourceId(''Microsoft.DocumentDB/databaseAccounts'', ''' + $cosmosName + ''')]"
-                ],
-                "apiVersion": "2017-05-01-preview",
-                "properties": {
-                    "name": "' + $cosmosDiagnosticsSettingName + '",
-                    "workspaceId": "[resourceId(''' + $LogAnalyticsResourceGroupName + ''', ''microsoft.operationalinsights/workspaces'', ''' + $LogAnalyticsWorkspaceName + ''')]",
-                    "metrics": [
-                        {
-                            "category": "Requests",
-                            "enabled": true
-                        }
-                    ],      
-                    "logs": [ 
-                        {
-                          "category": "ControlPlaneRequests",
-                          "enabled": true
-                        },
-                        {
-                            "category": "DataPlaneRequests",
-                            "enabled": true
-                        }
-                    ]
-                }
-            }
         ]
     }
     '
-    return ConvertFrom-Json $json
+
+    $obj = ConvertFrom-Json $json
+
+    if ($LogAnalyticsResourceGroupName -ne "")
+    {
+        $obj.resources += $diagnosticSettingObj
+    }
+
+    return $obj
 }
 

@@ -8,8 +8,8 @@ function Get-SpqRedis {
         [parameter(Mandatory = $true)] [string] $SkuName,
         [parameter(Mandatory = $true)] [string] $SkuFamily,
         [parameter(Mandatory = $true)] [int] $SkuCapacity,
-        [parameter(Mandatory = $true)] [string] $LogAnalyticsResourceGroupName,
-        [parameter(Mandatory = $true)] [string] $LogAnalyticsWorkspaceName
+        [parameter(Mandatory = $false)] [string] $LogAnalyticsResourceGroupName = "",
+        [parameter(Mandatory = $false)] [string] $LogAnalyticsWorkspaceName = ""
     )
     
     $redisName = Get-SpqResourceName `
@@ -20,6 +20,29 @@ function Get-SpqRedis {
         -Location $Location
 
     $redisDiagnosticsSettingName = $redisName + "-diagsett"
+
+    $diagnosticSettingJson = '
+    {
+        "type": "providers/diagnosticSettings",
+        "name": "Microsoft.Insights/' + $redisDiagnosticsSettingName + '",
+        "dependsOn": [
+            "[resourceId(''Microsoft.Cache/Redis'', ''' + $redisName + ''')]"
+        ],
+        "apiVersion": "2017-05-01-preview",
+        "properties": {
+            "name": "' + $redisDiagnosticsSettingName + '",
+            "workspaceId": "[resourceId(''' + $LogAnalyticsResourceGroupName + ''', ''microsoft.operationalinsights/workspaces'', ''' + $LogAnalyticsWorkspaceName + ''')]",
+            "metrics": [
+                {
+                    "category": "AllMetrics",
+                    "enabled": true
+                }
+            ]
+        }
+    }
+    '
+
+    $diagnosticSettingObj = ConvertFrom-Json $diagnosticSettingJson
 
     $json = '
     {
@@ -36,28 +59,18 @@ function Get-SpqRedis {
         "location": "' + $Location + '",
         "tags": {},
         "resources": [
-            {
-                "type": "providers/diagnosticSettings",
-                "name": "Microsoft.Insights/' + $redisDiagnosticsSettingName + '",
-                "dependsOn": [
-                    "[resourceId(''Microsoft.Cache/Redis'', ''' + $redisName + ''')]"
-                ],
-                "apiVersion": "2017-05-01-preview",
-                "properties": {
-                    "name": "' + $redisDiagnosticsSettingName + '",
-                    "workspaceId": "[resourceId(''' + $LogAnalyticsResourceGroupName + ''', ''microsoft.operationalinsights/workspaces'', ''' + $LogAnalyticsWorkspaceName + ''')]",
-                    "metrics": [
-                        {
-                            "category": "AllMetrics",
-                            "enabled": true
-                        }
-                    ]
-                }
-            }
         ]
     }
     '
-    return ConvertFrom-Json $json
+
+    $obj = ConvertFrom-Json $json
+
+    if ($LogAnalyticsResourceGroupName -ne "")
+    {
+        $obj.resources += $diagnosticSettingObj
+    }
+
+    return $obj
 }
 
 

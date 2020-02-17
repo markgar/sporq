@@ -22,20 +22,20 @@ function Get-Template {
     # Declare some infrastructure
 
     #region Key Vault
-    # $keyVault = Get-SpqKeyVault -ApplicationCode $applicationCode -EnvironmentName $environmentName -Location "centralus" `
-    #     -LogAnalyticsResourceGroupName "DefaultResourceGroup-EUS" `
-    #     -LogAnalyticsWorkspaceName "DefaultWorkspace-75ebdae9-6e1c-4baa-8b2e-5576f6356a91-EUS"
-    # $baseTemplate.resources += $keyVault
+    $keyVault = Get-SpqKeyVault -ApplicationCode $applicationCode -EnvironmentName $environmentName -Location "centralus"
+        # -LogAnalyticsResourceGroupName "DefaultResourceGroup-EUS" `
+        # -LogAnalyticsWorkspaceName "DefaultWorkspace-75ebdae9-6e1c-4baa-8b2e-5576f6356a91-EUS"
+    $baseTemplate.resources += $keyVault
     #endregion
 
     #region Storage Acount
-    # $myStorageAccount = Get-SpqStorageAccount `
-    #     -ApplicationCode $applicationCode `
-    #     -EnvironmentName $environmentName `
-    #     -Location "centralus" `
-    #     -ExceptionGuid "f354adb1-429c-4c83-b6bd-de6012358b33" `
-    #     -StorageAccessTier "Standard_LRS" 
-    # $baseTemplate.resources += $myStorageAccount
+    $myStorageAccount = Get-SpqStorageAccount `
+        -ApplicationCode $applicationCode `
+        -EnvironmentName $environmentName `
+        -Location "centralus" `
+        -ExceptionGuid "f354adb1-429c-4c83-b6bd-de6012358b33" `
+        -StorageAccessTier "Standard_LRS" 
+    $baseTemplate.resources += $myStorageAccount
     
     # $storageKeyVaultSecret = Get-SpqKeyVaultSecret `
     #     -ApplicationCode $applicationCode `
@@ -47,21 +47,21 @@ function Get-Template {
     #endregion
 
     # region Cosmos DB
-    # $myCosmosDB = Get-SpqCosmosDbAccount `
-    #     -ApplicationCode $applicationCode `
-    #     -EnvironmentName $environmentName `
-    #     -Location "centralus" `
-    #     -LogAnalyticsResourceGroupName "DefaultResourceGroup-EUS" `
-    #     -LogAnalyticsWorkspaceName "DefaultWorkspace-75ebdae9-6e1c-4baa-8b2e-5576f6356a91-EUS"
-    # $baseTemplate.resources += $myCosmosDB
+    $myCosmosDB = Get-SpqCosmosDbAccount `
+        -ApplicationCode $applicationCode `
+        -EnvironmentName $environmentName `
+        -Location "centralus" 
+        # -LogAnalyticsResourceGroupName "DefaultResourceGroup-EUS" `
+        # -LogAnalyticsWorkspaceName "DefaultWorkspace-75ebdae9-6e1c-4baa-8b2e-5576f6356a91-EUS"
+    $baseTemplate.resources += $myCosmosDB
 
-    # $cosmosKeyVaultSecret = Get-SpqKeyVaultSecret `
-    #     -ApplicationCode $applicationCode `
-    #     -EnvironmentName $environmentName `
-    #     -Location "centralus" `
-    #     -KeyVault $keyVault `
-    #     -KeyOwningObject $myCosmosDB
-    # $baseTemplate.resources += $cosmosKeyVaultSecret
+    $cosmosKeyVaultSecret = Get-SpqKeyVaultSecret `
+        -ApplicationCode $applicationCode `
+        -EnvironmentName $environmentName `
+        -Location "centralus" `
+        -KeyVault $keyVault `
+        -KeyOwningObject $myCosmosDB
+    $baseTemplate.resources += $cosmosKeyVaultSecret
     # endregion
 
     # region App Services
@@ -168,11 +168,11 @@ function Get-Template {
     #     -LogAnalyticsWorkspaceName "DefaultWorkspace-75ebdae9-6e1c-4baa-8b2e-5576f6356a91-EUS"
     # $baseTemplate.resources += $redis
 
-    # $appConfig = Get-SpqAppConfiguration `
-    #     -ApplicationCode $applicationCode `
-    #     -EnvironmentName $environmentName `
-    #     -Location "centralus" 
-    # $baseTemplate.resources += $appConfig
+    $appConfig = Get-SpqAppConfiguration `
+        -ApplicationCode $applicationCode `
+        -EnvironmentName $environmentName `
+        -Location "centralus" 
+    $baseTemplate.resources += $appConfig
 
     # $publicIp = Get-SpqPublicIpAddress `
     #     -ApplicationCode $applicationCode `
@@ -208,28 +208,28 @@ function Get-Template {
     # $functionApp = Get-SpqAppServiceFunctionApp -ApplicationCode $applicationCode -EnvironmentName $environmentName -Location "centralus" -AppServicePlan $consumptionASP -StorageAccount $myStorageAccount
     # $baseTemplate.resources += $functionApp
 
-    $cognitiveServiceAcct = Get-SpqCognitiveService -ApplicationCode $applicationCode -EnvironmentName $environmentName -Location "centralus"
-    $baseTemplate.resources += $cognitiveServiceAcct
+    # $cognitiveServiceAcct = Get-SpqCognitiveService -ApplicationCode $applicationCode -EnvironmentName $environmentName -Location "centralus"
+    # $baseTemplate.resources += $cognitiveServiceAcct
     
-    $frontDoor = Get-SpqFrontDoor `
-        -ApplicationCode $applicationCode `
-        -EnvironmentName $environmentName `
-        -Location "centralus"
+    # $frontDoor = Get-SpqFrontDoor `
+    #     -ApplicationCode $applicationCode `
+    #     -EnvironmentName $environmentName `
+    #     -Location "centralus"
 
-    $frontendEndpoint = Get-SpqFrontDoorFrontEndpoint -FrontDoor $frontDoor
-    $loadbalancingSetting = Get-SpqFrontDoorLoadBalancingSetting -FrontDoor $frontDoor
-    $healthProbeSetting = Get-SpqFrontDoorHealthProbeSetting -FrontDoor $frontDoor
-    $frontDoor.properties.frontendEndpoints += $frontendEndpoint
-    $frontDoor.properties.loadBalancingSettings += $loadbalancingSetting
-    $frontDoor.properties.healthProbeSettings += $healthProbeSetting
-    $backEnd = Get-SpqFrontDoorBackend -BackendAddress "www.hello.com"
-    $backendPool = Get-SpqFrontDoorBackendPool -FrontDoor $frontDoor -LoadBalancingSetting $loadbalancingSetting -HealthProbeSetting $healthProbeSetting
-    $backendPool.properties.backends += $backend
-    $frontDoor.properties.backendPools += $backendPool
-    $routingRule = Get-SpqFrontDoorRoutingRule -FrontDoor $frontDoor -BackendPool $backendPool -FrontendEndpoint $frontendEndpoint
-    $frontDoor.properties.routingRules += $routingRule
+    # $frontendEndpoint = Get-SpqFrontDoorFrontEndpoint -FrontDoor $frontDoor
+    # $loadbalancingSetting = Get-SpqFrontDoorLoadBalancingSetting -FrontDoor $frontDoor
+    # $healthProbeSetting = Get-SpqFrontDoorHealthProbeSetting -FrontDoor $frontDoor
+    # $frontDoor.properties.frontendEndpoints += $frontendEndpoint
+    # $frontDoor.properties.loadBalancingSettings += $loadbalancingSetting
+    # $frontDoor.properties.healthProbeSettings += $healthProbeSetting
+    # $backEnd = Get-SpqFrontDoorBackend -BackendAddress "www.hello.com"
+    # $backendPool = Get-SpqFrontDoorBackendPool -FrontDoor $frontDoor -LoadBalancingSetting $loadbalancingSetting -HealthProbeSetting $healthProbeSetting
+    # $backendPool.properties.backends += $backend
+    # $frontDoor.properties.backendPools += $backendPool
+    # $routingRule = Get-SpqFrontDoorRoutingRule -FrontDoor $frontDoor -BackendPool $backendPool -FrontendEndpoint $frontendEndpoint
+    # $frontDoor.properties.routingRules += $routingRule
     
-    $baseTemplate.resources += $frontDoor
+    # $baseTemplate.resources += $frontDoor
 
     # convert the template object to a json string
     $templateJson = $baseTemplate | ConvertTo-Json -Depth 10

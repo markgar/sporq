@@ -5,8 +5,8 @@ function Get-SpqPublicIpAddress {
         [parameter(Mandatory = $true)] [string] $Location,
         [parameter(Mandatory = $false)] [string] $UniqueNamePhrase = $null,
         [string] $ExceptionGuid,
-        [parameter(Mandatory = $true)] [string] $LogAnalyticsResourceGroupName,
-        [parameter(Mandatory = $true)] [string] $LogAnalyticsWorkspaceName
+        [parameter(Mandatory = $false)] [string] $LogAnalyticsResourceGroupName = "",
+        [parameter(Mandatory = $false)] [string] $LogAnalyticsWorkspaceName = ""
     )
     
     $pipName = Get-SpqResourceName `
@@ -17,6 +17,43 @@ function Get-SpqPublicIpAddress {
         -Location $Location
     
     $pipDiagnosticsSettingName = $pipName + "-diagsett"  
+
+    $diagnosticSettingJson = '
+    {
+        "type": "providers/diagnosticSettings",
+        "name": "Microsoft.Insights/' + $pipDiagnosticsSettingName + '",
+        "dependsOn": [
+            "[resourceId(''Microsoft.Network/publicIPAddresses'', ''' + $pipName + ''')]"
+        ],
+        "apiVersion": "2017-05-01-preview",
+        "properties": {
+            "name": "' + $pipDiagnosticsSettingName + '",
+            "workspaceId": "[resourceId(''' + $LogAnalyticsResourceGroupName + ''', ''microsoft.operationalinsights/workspaces'', ''' + $LogAnalyticsWorkspaceName + ''')]",
+            "metrics": [
+                {
+                    "category": "AllMetrics",
+                    "enabled": true
+                }
+            ],      
+            "logs": [ 
+                {
+                    "category": "DDoSProtectionNotifications",
+                    "enabled": true
+                },
+                {
+                    "category": "DDoSMitigationFlowLogs",
+                    "enabled": true
+                },
+                {
+                    "category": "DDoSMitigationReports",
+                    "enabled": true
+                }
+            ]
+        }
+    }
+    '
+
+    $diagnosticSettingObj = ConvertFrom-Json $diagnosticSettingJson
 
     $json = '
     {
@@ -31,41 +68,17 @@ function Get-SpqPublicIpAddress {
             "publicIPAllocationMethod": "Dynamic"
         },
         "resources": [            
-            {
-                "type": "providers/diagnosticSettings",
-                "name": "Microsoft.Insights/' + $pipDiagnosticsSettingName + '",
-                "dependsOn": [
-                    "[resourceId(''Microsoft.Network/publicIPAddresses'', ''' + $pipName + ''')]"
-                ],
-                "apiVersion": "2017-05-01-preview",
-                "properties": {
-                    "name": "' + $pipDiagnosticsSettingName + '",
-                    "workspaceId": "[resourceId(''' + $LogAnalyticsResourceGroupName + ''', ''microsoft.operationalinsights/workspaces'', ''' + $LogAnalyticsWorkspaceName + ''')]",
-                    "metrics": [
-                        {
-                            "category": "AllMetrics",
-                            "enabled": true
-                        }
-                    ],      
-                    "logs": [ 
-                        {
-                            "category": "DDoSProtectionNotifications",
-                            "enabled": true
-                        },
-                        {
-                            "category": "DDoSMitigationFlowLogs",
-                            "enabled": true
-                        },
-                        {
-                            "category": "DDoSMitigationReports",
-                            "enabled": true
-                        }
-                    ]
-                }
-            }
         ]
     }
     '
-    return ConvertFrom-Json $json
+
+    $obj = ConvertFrom-Json $json
+
+    if ($LogAnalyticsResourceGroupName -ne "")
+    {
+        $obj.resources += $diagnosticSettingObj
+    }
+
+    return $obj
 }
 

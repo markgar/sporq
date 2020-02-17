@@ -17,8 +17,8 @@ function Get-SpqSearch {
         [parameter(Mandatory = $true)] [string] $Sku,
         [parameter(Mandatory = $true)] [string] $ReplicaCount,
         [parameter(Mandatory = $true)] [string] $PartitionCount,
-        [parameter(Mandatory = $true)] [string] $LogAnalyticsResourceGroupName,
-        [parameter(Mandatory = $true)] [string] $LogAnalyticsWorkspaceName
+        [parameter(Mandatory = $false)] [string] $LogAnalyticsResourceGroupName = "",
+        [parameter(Mandatory = $false)] [string] $LogAnalyticsWorkspaceName = ""
     )
     
     $searchName = Get-SpqResourceName `
@@ -29,6 +29,35 @@ function Get-SpqSearch {
         -Location $Location
 
     $searchDiagnosticsSettingName = $searchName + "-diagsett"
+
+    $diagnosticSettingJson = '
+    {
+        "type": "providers/diagnosticSettings",
+        "name": "Microsoft.Insights/' + $searchDiagnosticsSettingName + '",
+        "dependsOn": [
+            "[resourceId(''Microsoft.Search/searchServices'', ''' + $searchName + ''')]"
+        ],
+        "apiVersion": "2017-05-01-preview",
+        "properties": {
+            "name": "' + $searchDiagnosticsSettingName + '",
+            "workspaceId": "[resourceId(''' + $LogAnalyticsResourceGroupName + ''', ''microsoft.operationalinsights/workspaces'', ''' + $LogAnalyticsWorkspaceName + ''')]",
+            "metrics": [
+                {
+                    "category": "AllMetrics",
+                    "enabled": true
+                }
+            ],      
+            "logs": [ 
+                {
+                  "category": "OperationLogs",
+                  "enabled": true
+                }
+            ]
+        }
+    }
+    '
+
+    $diagnosticSettingObj = ConvertFrom-Json $diagnosticSettingJson
 
     $json = '
     {
@@ -45,34 +74,18 @@ function Get-SpqSearch {
             "hostingMode": "Default"
         },
         "resources": [            
-            {
-                "type": "providers/diagnosticSettings",
-                "name": "Microsoft.Insights/' + $searchDiagnosticsSettingName + '",
-                "dependsOn": [
-                    "[resourceId(''Microsoft.Search/searchServices'', ''' + $searchName + ''')]"
-                ],
-                "apiVersion": "2017-05-01-preview",
-                "properties": {
-                    "name": "' + $searchDiagnosticsSettingName + '",
-                    "workspaceId": "[resourceId(''' + $LogAnalyticsResourceGroupName + ''', ''microsoft.operationalinsights/workspaces'', ''' + $LogAnalyticsWorkspaceName + ''')]",
-                    "metrics": [
-                        {
-                            "category": "AllMetrics",
-                            "enabled": true
-                        }
-                    ],      
-                    "logs": [ 
-                        {
-                          "category": "OperationLogs",
-                          "enabled": true
-                        }
-                    ]
-                }
-            }
         ]
     }
     '
-    return ConvertFrom-Json $json
+
+    $obj = ConvertFrom-Json $json
+
+    if ($LogAnalyticsResourceGroupName -ne "")
+    {
+        $obj.resources += $diagnosticSettingObj
+    }
+
+    return $obj
 }
 
 
