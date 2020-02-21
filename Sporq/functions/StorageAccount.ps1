@@ -2,8 +2,15 @@ function Get-SpqReferenceToStorageKey {
     Param(
         [parameter(Mandatory = $true)] [object] $StorageAccount
     )
-
     $reference = "[listKeys(resourceId('Microsoft.Storage/storageAccounts', '" + $StorageAccount.name + "'), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value]"
+    return $reference
+}
+
+function Get-SpqReferenceToStorageConnectionString {
+    Param(
+        [parameter(Mandatory = $true)] [object] $StorageAccount
+    )
+    $reference = "[concat('DefaultEndpointsProtocol=https;AccountName=" + $StorageAccount.name + ";AccountKey=', ListKeys(resourceId('Microsoft.Storage/storageAccounts', '" + $StorageAccount.name + "'), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value)]"
     return $reference
 }
 

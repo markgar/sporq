@@ -7,6 +7,14 @@ function Get-SpqReferenceToCosmosDbAccountKey {
     return $reference
 }
 
+function Get-SpqReferenceToCosmosDbAccountConnectionString {
+    Param(
+        [parameter(Mandatory = $true)] [object] $CosmosDbAccount
+    )
+    $reference = "[concat('AccountEndpoint=https://" + $CosmosDbAccount.name + ".documents.azure.com:443/;AccountKey=', listKeys(resourceId('Microsoft.DocumentDB/databaseAccounts', '" + $CosmosDbAccount.name + "'), providers('Microsoft.DocumentDB', 'databaseAccounts').apiVersions[0]).primaryMasterKey, ';')]"
+    return $reference
+}
+
 function Get-SpqCosmosDbAccount {
     Param(
         [parameter(Mandatory = $true)] [string] $ApplicationCode,

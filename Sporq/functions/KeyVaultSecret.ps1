@@ -16,7 +16,58 @@ function Get-SpqKeyVaultSecretName {
     return $name
 }
 
-function Get-SpqKeyVaultSecret {
+function Get-SpqKeyVaultRefForConncetionString {
+    Param(
+        [parameter(Mandatory = $true)] [string] $ApplicationCode,
+        [parameter(Mandatory = $true)] [string] $EnvironmentName,
+        [parameter(Mandatory = $true)] [string] $Location,
+        [parameter(Mandatory = $true)] [object] $KeyOwningObject,
+        [string] $ExceptionGuid,
+        [parameter(Mandatory = $true)] [object] $KeyVault
+    )
+
+    $referenceToKey = "NOTFOUND"
+
+    switch ($KeyOwningObject.type) {
+        "Microsoft.DocumentDB/databaseAccounts" { 
+            $referenceToKey = Get-SpqReferenceToCosmosDbAccountConnectionString -CosmosDbAccount $KeyOwningObject; break
+        }
+        "Microsoft.Storage/storageAccounts" {
+            $referenceToKey = Get-SpqReferenceToStorageConnectionString -Storage $KeyOwningObject; break 
+        }
+        # Not implemented yet
+        # "Microsoft.Search/searchServices" { 
+        #     $referenceToKey = Get-SpqReferenceToSearchAdminKeyConnectionString -Search $KeyOwningObject; break 
+        # }
+        # "Microsoft.EventHub/namespaces/AuthorizationRules" { 
+        #     $referenceToKey = Get-SpqReferenceToNamespaceAuthorizationRuleKey -NamespaceAuthorizationRule $KeyOwningObject; break
+        # }
+        # "Microsoft.EventHub/namespaces/eventhubs" { 
+        #     $referenceToKey = Get-ReferenceToEventHubKey -Storage $KeyOwningObject; break
+        # }
+    }
+
+    
+    $secretName = Get-SpqKeyVaultSecretName -ResourceObject $KeyOwningObject
+
+    $json = '
+    {
+        "type": "Microsoft.KeyVault/vaults/secrets",
+        "name": "' + $KeyVault.name + '/' + $secretName + '",
+        "apiVersion": "2018-02-14",
+        "location": "' + $Location + '",
+        "dependsOn": [
+            "[resourceId(''Microsoft.KeyVault/vaults'', ''' + $KeyVault.name + ''')]"
+        ],
+        "properties": {
+            "value": "' + $referenceToKey + '"
+        }
+    }
+    '
+    return ConvertFrom-Json $json
+}
+
+function Get-SpqKeyVaultRefForKey {
     Param(
         [parameter(Mandatory = $true)] [string] $ApplicationCode,
         [parameter(Mandatory = $true)] [string] $EnvironmentName,
@@ -66,6 +117,10 @@ function Get-SpqKeyVaultSecret {
     '
     return ConvertFrom-Json $json
 }
+
+# function Get-SpqKeyVaultSecret {
+
+# }
 
 
 

@@ -37,13 +37,13 @@ function Get-Template {
         -StorageAccessTier "Standard_LRS" 
     $baseTemplate.resources += $myStorageAccount
     
-    # $storageKeyVaultSecret = Get-SpqKeyVaultSecret `
-    #     -ApplicationCode $applicationCode `
-    #     -EnvironmentName $environmentName `
-    #     -Location "centralus" `
-    #     -KeyVault $keyVault `
-    #     -KeyOwningObject $myStorageAccount
-    # $baseTemplate.resources += $storageKeyVaultSecret
+    $storageKeyVaultSecret = Get-SpqKeyVaultRefForConncetionString `
+        -ApplicationCode $applicationCode `
+        -EnvironmentName $environmentName `
+        -Location "centralus" `
+        -KeyVault $keyVault `
+        -KeyOwningObject $myStorageAccount
+    $baseTemplate.resources += $storageKeyVaultSecret
     #endregion
 
     # region Cosmos DB
@@ -55,7 +55,7 @@ function Get-Template {
         # -LogAnalyticsWorkspaceName "DefaultWorkspace-75ebdae9-6e1c-4baa-8b2e-5576f6356a91-EUS"
     $baseTemplate.resources += $myCosmosDB
 
-    $cosmosKeyVaultSecret = Get-SpqKeyVaultSecret `
+    $cosmosKeyVaultSecret = Get-SpqKeyVaultRefForConncetionString `
         -ApplicationCode $applicationCode `
         -EnvironmentName $environmentName `
         -Location "centralus" `
