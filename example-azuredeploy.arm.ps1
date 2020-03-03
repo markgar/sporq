@@ -78,7 +78,8 @@ function Get-Template {
         -EnvironmentName $environmentName `
         -Location "centralus" `
         -UniqueNamePhrase "web" `
-        -AppServicePlan $webTierASP
+        -AppServicePlan $webTierASP `
+        -IncludeManagedIdentity $true
     $baseTemplate.resources += $webTierWebUi
     
     $settingHT = @{}

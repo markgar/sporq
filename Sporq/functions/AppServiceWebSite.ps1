@@ -5,7 +5,8 @@ function Get-SpqAppServiceWebSite {
         [parameter(Mandatory = $true)] [string] $Location,
         [parameter(Mandatory = $false)] [string] $UniqueNamePhrase = $null,
         [string] $ExceptionGuid,
-        [parameter(Mandatory = $true)] [object] $AppServicePlan
+        [parameter(Mandatory = $true)] [object] $AppServicePlan,
+        [parameter(Mandatory = $false)] [bool] $IncludeManagedIdentity = $false
     )
 
     $webSiteName = Get-SpqResourceName `
@@ -30,8 +31,15 @@ function Get-SpqAppServiceWebSite {
         "dependsOn": [
             "[resourceId(''Microsoft.Web/serverfarms'', ''' + $AppServicePlan.name + ''')]"
         ],
-        "resources": []
+        "resources": []'
+    if ($IncludeManagedIdentity)
+    {
+        $json += ',
+        "identity": {
+            "type": "SystemAssigned"
+        }'
     }
-    '
+    
+    $json += '}'
     return ConvertFrom-Json $json
 }

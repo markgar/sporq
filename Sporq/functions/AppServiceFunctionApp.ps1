@@ -6,7 +6,8 @@ function Get-SpqAppServiceFunctionApp {
         [parameter(Mandatory = $false)] [string] $UniqueNamePhrase = $null,
         [string] $ExceptionGuid,
         [parameter(Mandatory = $true)] [object] $AppServicePlan,
-        [parameter(Mandatory = $true)] [object] $StorageAccount
+        [parameter(Mandatory = $true)] [object] $StorageAccount,
+        [parameter(Mandatory = $false)] [bool] $IncludeManagedIdentity = $false
     )
 
     $webSiteName = Get-SpqResourceName `
@@ -32,7 +33,16 @@ function Get-SpqAppServiceFunctionApp {
             "[resourceId(''Microsoft.Storage/storageAccounts'', ''' + $StorageAccount.name + ''')]"
         ],
         "resources": []
-    }
     '
+
+    if ($IncludeManagedIdentity)
+    {
+        $json += ',
+        "identity": {
+            "type": "SystemAssigned"
+        }'
+    }
+    
+    $json += '}'
     return ConvertFrom-Json $json
 }
