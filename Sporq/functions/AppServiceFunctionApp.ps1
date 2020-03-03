@@ -31,7 +31,7 @@ function Get-SpqAppServiceFunctionApp {
             "[resourceId(''Microsoft.Web/serverfarms'', ''' + $AppServicePlan.name + ''')]",
             "[resourceId(''Microsoft.Storage/storageAccounts'', ''' + $StorageAccount.name + ''')]"
         ],
-        "resources": []
+        "resources": ["foo": "bar"]
     }
     '
     return ConvertFrom-Json $json
