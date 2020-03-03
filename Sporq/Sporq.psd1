@@ -12,7 +12,7 @@
     #RootModule        = 'Sporq.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '0.14.0'
+    ModuleVersion     = '0.15.0'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -71,6 +71,7 @@
         './functions/AppConfig.ps1',
         './functions/BaseTemplate.ps1',
         './functions/AppInsights.ps1'
+        './functions/AppServiceAppSettings.ps1',
         './functions/AppServiceFunctionApp.ps1',
         './functions/AppServicePlan.ps1',
         './functions/AppServicePlanConsumption.ps1',

@@ -65,21 +65,30 @@ function Get-Template {
     # endregion
 
     # region App Services
-    # $webTierASP = Get-SpqAppServicePlan `
-    #     -ApplicationCode $applicationCode `
-    #     -EnvironmentName $environmentName `
-    #     -Location "centralus" `
-    #     -AppServicePlanSKU "S1"
-    # $baseTemplate.resources += $webTierASP
+    $webTierASP = Get-SpqAppServicePlan `
+        -ApplicationCode $applicationCode `
+        -EnvironmentName $environmentName `
+        -Location "centralus" `
+        -AppServicePlanSKU "S1"
+    $baseTemplate.resources += $webTierASP
 
     
-    # $webTierWebUi = Get-SpqAppServiceWebSite `
-    #     -ApplicationCode $applicationCode `
-    #     -EnvironmentName $environmentName `
-    #     -Location "centralus" `
-    #     -UniqueNamePhrase "web" `
-    #     -AppServicePlan $webTierASP
-    # $baseTemplate.resources += $webTierWebUi
+    $webTierWebUi = Get-SpqAppServiceWebSite `
+        -ApplicationCode $applicationCode `
+        -EnvironmentName $environmentName `
+        -Location "centralus" `
+        -UniqueNamePhrase "web" `
+        -AppServicePlan $webTierASP
+    $baseTemplate.resources += $webTierWebUi
+    
+    $settingHT = @{}
+    $settingHT.add("key1", "value1")
+    $settingHT.add("key2", "value2")
+
+    $webTierAppSettings = Get-SpqAppServiceAppSettings `
+        -AppServiceSite $webTierWebUi `
+        -AppSettingsKeyValueHashtable $settingHT
+    $webTierWebUi.resources += $webTierAppSettings
 
     # $webTierApi = Get-SpqAppServiceWebSite `
     #     -ApplicationCode $applicationCode `

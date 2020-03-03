@@ -29,7 +29,8 @@ function Get-SpqAppServiceWebSite {
         },
         "dependsOn": [
             "[resourceId(''Microsoft.Web/serverfarms'', ''' + $AppServicePlan.name + ''')]"
-        ]
+        ],
+        "resources": []
     }
     '
     return ConvertFrom-Json $json
