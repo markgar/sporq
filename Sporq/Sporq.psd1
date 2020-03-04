@@ -12,7 +12,7 @@
     #RootModule        = 'Sporq.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '0.15.7'
+    ModuleVersion     = '0.16.0'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -82,6 +82,7 @@
         './functions/EventHubNamespace.ps1',
         './functions/FrontDoor.ps1',
         './functions/KeyVault.ps1',
+        './functions/KeyVaultPolicy.ps1',
         './functions/KeyVaultSecret.ps1',
         './functions/LogAnalytics.ps1',
         './functions/NetworkInterface.ps1',

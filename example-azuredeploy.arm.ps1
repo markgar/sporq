@@ -79,7 +79,7 @@ function Get-Template {
         -Location "centralus" `
         -UniqueNamePhrase "web" `
         -AppServicePlan $webTierASP `
-        -IncludeManagedIdentity $true
+        -IncludeManagedIdentity $true 
     $baseTemplate.resources += $webTierWebUi
     
     $settingHT = @{}
@@ -90,6 +90,10 @@ function Get-Template {
         -AppServiceSite $webTierWebUi `
         -AppSettingsKeyValueHashtable $settingHT
     $webTierWebUi.resources += $webTierAppSettings
+
+    $appServicesManagedIdentityAccessPolicy = Get-SpqKeyVaultPolicy `
+        -ManagedIdentityOwningObject $webTierWebUi
+    $keyVault.properties.accessPolicies += $appServicesManagedIdentityAccessPolicy
 
     # $webTierApi = Get-SpqAppServiceWebSite `
     #     -ApplicationCode $applicationCode `
