@@ -55,10 +55,6 @@ function Get-SpqApimConsumptionInstance {
 
 function Get-SpqApimPolicy {
     Param(
-        [parameter(Mandatory = $true)] [string] $ApplicationCode,
-        [parameter(Mandatory = $true)] [string] $EnvironmentName,
-        [parameter(Mandatory = $true)] [string] $Location,
-        [parameter(Mandatory = $false)] [string] $UniqueNamePhrase = $null,
         [string] $ExceptionGuid,
         [parameter(Mandatory = $true)] [object] $APIMInstance
     )
@@ -82,10 +78,6 @@ function Get-SpqApimPolicy {
 
 function Get-SpqApimSubscription {
     Param(
-        [parameter(Mandatory = $true)] [string] $ApplicationCode,
-        [parameter(Mandatory = $true)] [string] $EnvironmentName,
-        [parameter(Mandatory = $true)] [string] $Location,
-        [parameter(Mandatory = $false)] [string] $UniqueNamePhrase = $null,
         [string] $ExceptionGuid,
         [parameter(Mandatory = $true)] [object] $APIMInstance
     )
