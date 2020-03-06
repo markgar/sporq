@@ -104,7 +104,7 @@ function Get-SpqResourceTypeAbbreviation {
         "microsoft.operationalinsights/workspaces" { $abbreviation = "loganltcs"; break }
         "Microsoft.Network/frontDoors" { $abbreviation = "frtdr"; break }
         "Microsoft.CognitiveServices/accounts" { $abbreviation = "cogsvc"; break }
-        
+        "Microsoft.ApiManagement/service" { $abbreviation = "apim"; break }
     }
 
     return $abbreviation

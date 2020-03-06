@@ -68,6 +68,7 @@
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
     NestedModules     = @(
         './functions/Common.ps1',
+        './functions/APIManagement.ps1',
         './functions/AppConfig.ps1',
         './functions/BaseTemplate.ps1',
         './functions/AppInsights.ps1'

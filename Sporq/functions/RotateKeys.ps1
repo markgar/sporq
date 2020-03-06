@@ -109,7 +109,8 @@ function  Install-NewStorageKey {
         [parameter(Mandatory = $true)] [string] $ResourceGroupName,
         [parameter(Mandatory = $true)] [string] $KeyName,
         [parameter(Mandatory = $true)] [string] $KeyVaultName,
-        [parameter(Mandatory = $true)] [string] $StorageAccountName
+        [parameter(Mandatory = $true)] [string] $StorageAccountName,
+        [parameter(Mandatory = $true)] [object] $KeyReferenceConfig        
     )
     if ($KeyName.tolower() -eq "primary") {
         $keyName = "key1"
@@ -130,10 +131,20 @@ function  Install-NewStorageKey {
     # get secret ready to store in key vault
     $secretValue = ConvertTo-SecureString $storageAccountKey -AsPlainText -Force
 
-    # store in key vault
     $secretName = $StorageAccountName + "-key"
     Write-Host "Storing Secret"$SecretName
     $SetKeyResult = Set-AzureKeyVaultSecret -VaultName $KeyVaultName -Name $secretName -SecretValue $secretValue
+    $WebApp = Get-AzWebApp -ResourceGroupName $KeyReferenceConfig.WebSiteResourceGroupName -Name $KeyReferenceConfig.WebSiteName
+    $appSettingList = $WebApp.SiteConfig.AppSettings
+
+    $hash = @{}
+    ForEach ($kvp in $appSettingList) {
+        $hash[$kvp.Name] = $kvp.Value
+    }
+
+    $hash[$KeyReferenceConfig.WebSiteSettingName] = "@Microsoft.KeyVault(SecretUri=" + $SetKeyResult.Id + ")"
+
+    $SetResult = Set-AzWebApp -ResourceGroupName $KeyReferenceConfig.WebSiteResourceGroupName -Name $KeyReferenceConfig.WebSiteName -AppSettings $hash
 }
 
 
@@ -158,31 +169,54 @@ function  Install-NewKeys {
         Write-Host "Found KeyVault"$keyVaultname
     }
 
+    $json = 
+    '
+    {
+        "tododevstrgfuncusc":
+        {
+            "WebSiteSettingName":"AzureWebJobsStorage",
+            "WebSiteResourceGroupName": "serverless-todo",
+            "WebSiteName": "todo-dev-appsvcfunc-usc"
+        },
+        "tododevstrgfuncusc1":
+        {
+            "WebSiteSettingName":"AzureWebJobsStorage",
+            "WebSiteResourceGroupName": "serverless-todo",
+            "WebSiteName": "todo-dev-appsvcfunc-usc"
+        }
+    }
+    '
+
+    $config = ConvertFrom-Json $json
+
     Write-Host "Looping through ResourceGroup again for resources with keys to rotate"
     foreach ($resource in $resources) {
-
+        $resourceName = $resource.Name
         switch ($resource.type) {
             "Microsoft.Storage/storageAccounts" {
-                Write-Host "Found Storage Account"$resource.name 
-                Install-NewStorageKey -KeyName $KeyName -KeyVaultName $keyVaultName -ResourceGroupName $resourceGroupName -StorageAccountName $resource.name 
+                Write-Host "Found Storage Account"$resourceName 
+                Install-NewStorageKey -KeyName $KeyName -KeyVaultName $keyVaultName -ResourceGroupName $resourceGroupName -StorageAccountName $resource.name -KeyReferenceConfig $config.$resourceName
                 break 
             }
             "Microsoft.Search/searchServices" {
-                Write-Host "Found Search Service"$resource.name 
-                Install-NewSearchAdminKey -KeyName $KeyName -KeyVaultName $keyVaultName -ResourceGroupName $resourceGroupName -SearchServiceName $resource.name 
+                Write-Host "Found Search Service"$resourceName 
+                Install-NewSearchAdminKey -KeyName $KeyName -KeyVaultName $keyVaultName -ResourceGroupName $resourceGroupName -SearchServiceName $resourceName 
                 break 
             }
-            "Microsoft.DocumentDB/databaseAccounts" {
-                Write-Host "Found CosmosDB"$resource.name 
-                Install-NewCosmosDbAccountKey -KeyName $KeyName -KeyVaultName $keyVaultName -ResourceGroupName $resourceGroupName -CosmosDbAccountName $resource.name 
-                break 
-            }
+            #"Microsoft.DocumentDB/databaseAccounts" {
+            #    Write-Host "Found CosmosDB"$resourceName 
+            #    Install-NewCosmosDbKey -KeyName $KeyName -KeyVaultName $keyVaultName -ResourceGroupName $resourceGroupName -CosmosDbAccountName $resourceName 
+            #    break 
+            #}
             "Microsoft.EventHub/namespaces" {
-                Write-Host "Found EventHub Namespace"$resource.name 
-                Install-NewEventHubNamespaceKey -KeyName $KeyName -KeyVaultName $keyVaultName -ResourceGroupName $resourceGroupName -EventHubNamespaceName $resource.name 
+                Write-Host "Found EventHub Namespace"$resourceName 
+                Install-NewEventHubNamespaceKey -KeyName $KeyName -KeyVaultName $keyVaultName -ResourceGroupName $resourceGroupName -EventHubNamespaceName $resourceName 
                 break 
             }
         }
 
     }
 }
+
+
+Install-NewKeys -ResourceGroupName "serverless-todo" -KeyName "Primary"
