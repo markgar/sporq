@@ -23,8 +23,8 @@ function Get-Template {
 
     #region Key Vault
     $keyVault = Get-SpqKeyVault -ApplicationCode $applicationCode -EnvironmentName $environmentName -Location "centralus"
-        # -LogAnalyticsResourceGroupName "DefaultResourceGroup-EUS" `
-        # -LogAnalyticsWorkspaceName "DefaultWorkspace-75ebdae9-6e1c-4baa-8b2e-5576f6356a91-EUS"
+    # -LogAnalyticsResourceGroupName "DefaultResourceGroup-EUS" `
+    # -LogAnalyticsWorkspaceName "DefaultWorkspace-75ebdae9-6e1c-4baa-8b2e-5576f6356a91-EUS"
     $baseTemplate.resources += $keyVault
     #endregion
 
@@ -51,8 +51,8 @@ function Get-Template {
         -ApplicationCode $applicationCode `
         -EnvironmentName $environmentName `
         -Location "centralus" 
-        # -LogAnalyticsResourceGroupName "DefaultResourceGroup-EUS" `
-        # -LogAnalyticsWorkspaceName "DefaultWorkspace-75ebdae9-6e1c-4baa-8b2e-5576f6356a91-EUS"
+    # -LogAnalyticsResourceGroupName "DefaultResourceGroup-EUS" `
+    # -LogAnalyticsWorkspaceName "DefaultWorkspace-75ebdae9-6e1c-4baa-8b2e-5576f6356a91-EUS"
     $baseTemplate.resources += $myCosmosDB
 
     $cosmosKeyVaultSecret = Get-SpqKeyVaultRefForConncetionString `
@@ -82,7 +82,7 @@ function Get-Template {
         -IncludeManagedIdentity $true 
     $baseTemplate.resources += $webTierWebUi
     
-    $settingHT = @{}
+    $settingHT = @{ }
     $settingHT.add("key1", "value1")
     $settingHT.add("key2", "value2")
 
@@ -94,6 +94,28 @@ function Get-Template {
     $appServicesManagedIdentityAccessPolicy = Get-SpqKeyVaultPolicy `
         -ManagedIdentityOwningObject $webTierWebUi
     $keyVault.properties.accessPolicies += $appServicesManagedIdentityAccessPolicy
+
+    $apimInstance = Get-SpqApimConsumptionInstance `
+        -ApplicationCode $applicationCode `
+        -EnvironmentName $environmentName `
+        -Location "centralus" `
+        -PublisherEmail "mgarner@microsoft.com" `
+        -PublisherName "mgarner"
+    $baseTemplate.resources += $apimInstance
+
+    $apimPolicy = Get-SpqApimPolicy `
+        -ApplicationCode $applicationCode `
+        -EnvironmentName $environmentName `
+        -Location "centralus" `
+        -APIMInstance $apimInstance
+    $baseTemplate.resources += $apimPolicy
+
+    $apimSubscription = Get-SpqApimSubscription `
+        -ApplicationCode $applicationCode `
+        -EnvironmentName $environmentName `
+        -Location "centralus" `
+        -APIMInstance $apimInstance
+    $baseTemplate.resources += $apimSubscription
 
     # $webTierApi = Get-SpqAppServiceWebSite `
     #     -ApplicationCode $applicationCode `

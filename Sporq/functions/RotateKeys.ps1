@@ -3,7 +3,8 @@ function  Install-NewCosmosDbKey {
         [parameter(Mandatory = $true)] [string] $ResourceGroupName,
         [parameter(Mandatory = $true)] [string] $KeyName,
         [parameter(Mandatory = $true)] [string] $KeyVaultName,
-        [parameter(Mandatory = $true)] [string] $CosmosDbAccountName
+        [parameter(Mandatory = $true)] [string] $CosmosDbAccountName,
+        [parameter(Mandatory = $true)] [object] $KeyReferenceConfig
     )
 
     $keyKind = @{ "keyKind" = "$KeyName" }
@@ -26,6 +27,18 @@ function  Install-NewCosmosDbKey {
     $secretName = $CosmosDbAccountName + "-key"
     Write-Host "Storing Secret"$SecretName
     $SetKeyResult = Set-AzureKeyVaultSecret -VaultName $KeyVaultName -Name $secretName -SecretValue $secretValue
+
+    $WebApp = Get-AzWebApp -ResourceGroupName $KeyReferenceConfig.WebSiteResourceGroupName -Name $KeyReferenceConfig.WebSiteName
+    $appSettingList = $WebApp.SiteConfig.AppSettings
+
+    $hash = @{}
+    ForEach ($kvp in $appSettingList) {
+        $hash[$kvp.Name] = $kvp.Value
+    }
+
+    $hash[$KeyReferenceConfig.WebSiteSettingName] = "@Microsoft.KeyVault(SecretUri=" + $SetKeyResult.Id + ")"
+
+    $SetResult = Set-AzWebApp -ResourceGroupName $KeyReferenceConfig.WebSiteResourceGroupName -Name $KeyReferenceConfig.WebSiteName -AppSettings $hash
 }
 
 function  Install-NewEventHubNamespaceKey {
@@ -33,7 +46,8 @@ function  Install-NewEventHubNamespaceKey {
         [parameter(Mandatory = $true)] [string] $ResourceGroupName,
         [parameter(Mandatory = $true)] [string] $KeyName,
         [parameter(Mandatory = $true)] [string] $KeyVaultName,
-        [parameter(Mandatory = $true)] [string] $EventHubNamespaceName
+        [parameter(Mandatory = $true)] [string] $EventHubNamespaceName,
+        [parameter(Mandatory = $true)] [object] $KeyReferenceConfig
     )
 
     Write-Host "Getting Auth Rules..."
@@ -74,6 +88,18 @@ function  Install-NewEventHubNamespaceKey {
         $secretName = $authRule.name + "-key"
         Write-Host "Storing Secret"$SecretName
         $SetKeyResult = Set-AzureKeyVaultSecret -VaultName $KeyVaultName -Name $secretName -SecretValue $secretValue
+
+        $WebApp = Get-AzWebApp -ResourceGroupName $KeyReferenceConfig.WebSiteResourceGroupName -Name $KeyReferenceConfig.WebSiteName
+        $appSettingList = $WebApp.SiteConfig.AppSettings
+
+        $hash = @{}
+        ForEach ($kvp in $appSettingList) {
+            $hash[$kvp.Name] = $kvp.Value
+        }
+
+        $hash[$KeyReferenceConfig.WebSiteSettingName] = "@Microsoft.KeyVault(SecretUri=" + $SetKeyResult.Id + ")"
+
+        $SetResult = Set-AzWebApp -ResourceGroupName $KeyReferenceConfig.WebSiteResourceGroupName -Name $KeyReferenceConfig.WebSiteName -AppSettings $hash
     }
 
 }
@@ -83,7 +109,8 @@ function  Install-NewSearchAdminKey {
         [parameter(Mandatory = $true)] [string] $ResourceGroupName,
         [parameter(Mandatory = $true)] [string] $KeyName,
         [parameter(Mandatory = $true)] [string] $KeyVaultName,
-        [parameter(Mandatory = $true)] [string] $SearchServiceName
+        [parameter(Mandatory = $true)] [string] $SearchServiceName,
+        [parameter(Mandatory = $true)] [object] $KeyReferenceConfig
     )
 
     $results = New-AzSearchAdminKey -ResourceGroupName $ResourceGroupName -ServiceName $SearchServiceName -KeyKind $KeyName -Force
@@ -102,6 +129,18 @@ function  Install-NewSearchAdminKey {
     $secretName = $SearchServiceName + "-key"
     Write-Host "Storing Secret"$SecretName
     $SetKeyResult = Set-AzureKeyVaultSecret -VaultName $KeyVaultName -Name $secretName -SecretValue $secretValue
+
+    $WebApp = Get-AzWebApp -ResourceGroupName $KeyReferenceConfig.WebSiteResourceGroupName -Name $KeyReferenceConfig.WebSiteName
+    $appSettingList = $WebApp.SiteConfig.AppSettings
+
+    $hash = @{}
+    ForEach ($kvp in $appSettingList) {
+        $hash[$kvp.Name] = $kvp.Value
+    }
+
+    $hash[$KeyReferenceConfig.WebSiteSettingName] = "@Microsoft.KeyVault(SecretUri=" + $SetKeyResult.Id + ")"
+
+    $SetResult = Set-AzWebApp -ResourceGroupName $KeyReferenceConfig.WebSiteResourceGroupName -Name $KeyReferenceConfig.WebSiteName -AppSettings $hash
 }
 
 function  Install-NewStorageKey {
@@ -110,7 +149,7 @@ function  Install-NewStorageKey {
         [parameter(Mandatory = $true)] [string] $KeyName,
         [parameter(Mandatory = $true)] [string] $KeyVaultName,
         [parameter(Mandatory = $true)] [string] $StorageAccountName,
-        [parameter(Mandatory = $true)] [object] $KeyReferenceConfig        
+        [parameter(Mandatory = $true)] [object] $KeyReferenceConfig
     )
     if ($KeyName.tolower() -eq "primary") {
         $keyName = "key1"
@@ -122,18 +161,24 @@ function  Install-NewStorageKey {
         $keyOrdinal = 1;
     }
 
+    ################# STORAGE ACCOUNT
     # rotate primary key
-    $NewKeyResult = New-AzStorageAccountKey -ResourceGroupName $resourceGroupName -Name $StorageAccountName  -KeyName $keyName
+    $NewKeyResult = New-AzStorageAccountKey -ResourceGroupName $resourceGroupName -Name $StorageAccountName -KeyName $keyName
 
     # retrieve primary key
     $storageAccountKey = (Get-AzStorageAccountKey -ResourceGroupName $resourceGroupName -Name $storageAccountName).Value[$keyOrdinal]
 
+    
+    ################ KEY VAULT
     # get secret ready to store in key vault
     $secretValue = ConvertTo-SecureString $storageAccountKey -AsPlainText -Force
 
     $secretName = $StorageAccountName + "-key"
     Write-Host "Storing Secret"$SecretName
     $SetKeyResult = Set-AzureKeyVaultSecret -VaultName $KeyVaultName -Name $secretName -SecretValue $secretValue
+
+
+    ############### WEB APP
     $WebApp = Get-AzWebApp -ResourceGroupName $KeyReferenceConfig.WebSiteResourceGroupName -Name $KeyReferenceConfig.WebSiteName
     $appSettingList = $WebApp.SiteConfig.AppSettings
 
@@ -174,13 +219,13 @@ function  Install-NewKeys {
     {
         "tododevstrgfuncusc":
         {
-            "WebSiteSettingName":"AzureWebJobsStorage",
+            "WebSiteSettingName": "AzureWebJobsStorage",
             "WebSiteResourceGroupName": "serverless-todo",
             "WebSiteName": "todo-dev-appsvcfunc-usc"
         },
-        "tododevstrgfuncusc1":
+        "todo-dev-csmsacc-usc":
         {
-            "WebSiteSettingName":"AzureWebJobsStorage",
+            "WebSiteSettingName": "TodoCosmosAccountConnectionString",
             "WebSiteResourceGroupName": "serverless-todo",
             "WebSiteName": "todo-dev-appsvcfunc-usc"
         }
@@ -200,17 +245,17 @@ function  Install-NewKeys {
             }
             "Microsoft.Search/searchServices" {
                 Write-Host "Found Search Service"$resourceName 
-                Install-NewSearchAdminKey -KeyName $KeyName -KeyVaultName $keyVaultName -ResourceGroupName $resourceGroupName -SearchServiceName $resourceName 
+                Install-NewSearchAdminKey -KeyName $KeyName -KeyVaultName $keyVaultName -ResourceGroupName $resourceGroupName -SearchServiceName $resourceName -KeyReferenceConfig $config.$resourceName
                 break 
             }
-            #"Microsoft.DocumentDB/databaseAccounts" {
-            #    Write-Host "Found CosmosDB"$resourceName 
-            #    Install-NewCosmosDbKey -KeyName $KeyName -KeyVaultName $keyVaultName -ResourceGroupName $resourceGroupName -CosmosDbAccountName $resourceName 
-            #    break 
-            #}
+            "Microsoft.DocumentDB/databaseAccounts" {
+               Write-Host "Found CosmosDB"$resourceName 
+               Install-NewCosmosDbKey -KeyName $KeyName -KeyVaultName $keyVaultName -ResourceGroupName $resourceGroupName -CosmosDbAccountName $resourceName -KeyReferenceConfig $config.$resourceName
+               break 
+            }
             "Microsoft.EventHub/namespaces" {
                 Write-Host "Found EventHub Namespace"$resourceName 
-                Install-NewEventHubNamespaceKey -KeyName $KeyName -KeyVaultName $keyVaultName -ResourceGroupName $resourceGroupName -EventHubNamespaceName $resourceName 
+                Install-NewEventHubNamespaceKey -KeyName $KeyName -KeyVaultName $keyVaultName -ResourceGroupName $resourceGroupName -EventHubNamespaceName $resourceName -KeyReferenceConfig $config.$resourceName
                 break 
             }
         }
