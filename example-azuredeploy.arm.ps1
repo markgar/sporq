@@ -91,6 +91,12 @@ function Get-Template {
         -AppSettingsKeyValueHashtable $settingHT
     $webTierWebUi.resources += $webTierAppSettings
 
+    $webTierAuthSettings = Get-SpqAppServicAuthSettings `
+        -AppServiceSite $webTierWebUi `
+        -AppRegistrationClientId "cefc59a4-7ea1-4d30-bfa0-b1ff16f0ef08"`
+        -Issuer "https://sts.windows.net/72f988bf-86f1-41af-91ab-2d7cd011db47/"
+    $webTierWebUi.resources += $webTierAuthSettings
+
     $appServicesManagedIdentityAccessPolicy = Get-SpqKeyVaultPolicy `
         -ManagedIdentityOwningObject $webTierWebUi
     $keyVault.properties.accessPolicies += $appServicesManagedIdentityAccessPolicy
@@ -104,16 +110,10 @@ function Get-Template {
     $baseTemplate.resources += $apimInstance
 
     $apimPolicy = Get-SpqApimPolicy `
-        -ApplicationCode $applicationCode `
-        -EnvironmentName $environmentName `
-        -Location "centralus" `
         -APIMInstance $apimInstance
     $baseTemplate.resources += $apimPolicy
 
     $apimSubscription = Get-SpqApimSubscription `
-        -ApplicationCode $applicationCode `
-        -EnvironmentName $environmentName `
-        -Location "centralus" `
         -APIMInstance $apimInstance
     $baseTemplate.resources += $apimSubscription
 

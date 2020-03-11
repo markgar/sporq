@@ -20,8 +20,9 @@ function  Install-NewCosmosDbKey {
         $keyValue = $keys.secondaryMasterKey
     }
 
+    $cosmosConnectionString = "AccountEndpoint=https://" + $CosmosDbAccountName + ".documents.azure.com:443/;AccountKey=" + $keyValue + ";"
     # get secret ready to store in key vault
-    $secretValue = ConvertTo-SecureString $keyValue -AsPlainText -Force
+    $secretValue = ConvertTo-SecureString $cosmosConnectionString -AsPlainText -Force
 
     # store in key vault
     $secretName = $CosmosDbAccountName + "-key"
@@ -161,24 +162,20 @@ function  Install-NewStorageKey {
         $keyOrdinal = 1;
     }
 
-    ################# STORAGE ACCOUNT
     # rotate primary key
-    $NewKeyResult = New-AzStorageAccountKey -ResourceGroupName $resourceGroupName -Name $StorageAccountName -KeyName $keyName
+    $NewKeyResult = New-AzStorageAccountKey -ResourceGroupName $resourceGroupName -Name $StorageAccountName  -KeyName $keyName
 
     # retrieve primary key
     $storageAccountKey = (Get-AzStorageAccountKey -ResourceGroupName $resourceGroupName -Name $storageAccountName).Value[$keyOrdinal]
 
-    
-    ################ KEY VAULT
+    $storageConnectionString = "DefaultEndpointsProtocol=https;AccountName=" + $StorageAccountName+ ";AccountKey=" + $storageAccountKey + ";EndpointSuffix=core.windows.net"
     # get secret ready to store in key vault
-    $secretValue = ConvertTo-SecureString $storageAccountKey -AsPlainText -Force
+    $secretValue = ConvertTo-SecureString $storageConnectionString -AsPlainText -Force
 
     $secretName = $StorageAccountName + "-key"
     Write-Host "Storing Secret"$SecretName
     $SetKeyResult = Set-AzureKeyVaultSecret -VaultName $KeyVaultName -Name $secretName -SecretValue $secretValue
 
-
-    ############### WEB APP
     $WebApp = Get-AzWebApp -ResourceGroupName $KeyReferenceConfig.WebSiteResourceGroupName -Name $KeyReferenceConfig.WebSiteName
     $appSettingList = $WebApp.SiteConfig.AppSettings
 
@@ -217,17 +214,11 @@ function  Install-NewKeys {
     $json = 
     '
     {
-        "tododevstrgfuncusc":
+        "resource1":
         {
             "WebSiteSettingName": "AzureWebJobsStorage",
-            "WebSiteResourceGroupName": "serverless-todo",
-            "WebSiteName": "todo-dev-appsvcfunc-usc"
-        },
-        "todo-dev-csmsacc-usc":
-        {
-            "WebSiteSettingName": "TodoCosmosAccountConnectionString",
-            "WebSiteResourceGroupName": "serverless-todo",
-            "WebSiteName": "todo-dev-appsvcfunc-usc"
+            "WebSiteResourceGroupName": "resourcegroup",
+            "WebSiteName": "websitename"
         }
     }
     '
