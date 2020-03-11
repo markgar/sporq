@@ -12,7 +12,7 @@
     #RootModule        = 'Sporq.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '0.17.2'
+    ModuleVersion     = '0.18.0'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
