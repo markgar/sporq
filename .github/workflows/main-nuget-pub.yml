@@ -21,5 +21,5 @@ jobs:
         $env:PSModulePath = $env:PSModulePath + ":" + $pwd
         Write-Host $env:PSModulePath
         Import-Module ./Sporq/Sporq.psd1 -Force
-        Publish-Module -Name 'Sporq' -NuGetApiKey '${{ secrets.sporq_powershell_gallery_api_key }}'
+        Publish-Module -Name 'Sporq' -NuGetApiKey '${{ secrets.convertfrom_powershell_gallery_api_key }}'
       shell: pwsh
